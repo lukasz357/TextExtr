@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HTMLParser"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PDFBox"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jsoup"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSoup"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PdfBox"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

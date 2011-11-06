@@ -1,9 +1,5 @@
 package textextr;
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.junit.Test;
 
 public class HTMLParserTest {
 

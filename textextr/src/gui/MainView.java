@@ -1,39 +1,15 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import textextr.ActionJList;
-import textextr.HTMLParser;
-
-import java.awt.CardLayout;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-
-import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.GridLayout;
-import javax.swing.JTabbedPane;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
-import javax.swing.SpringLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class MainView {
 
