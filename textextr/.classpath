@@ -8,5 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSoup"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PdfBox"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GSon"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
