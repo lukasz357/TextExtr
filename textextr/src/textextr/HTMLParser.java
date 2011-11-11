@@ -8,118 +8,41 @@ import java.util.List;
 
 public class HTMLParser{
 	public HTMLParser() throws IOException {
-		setLinks2(new Elements());
-		setP(new HTTPRequestPoster());
+		setLinks(new Elements());
+		setHTTPReqPst(new HTTPRequestPoster());
 		String s = HTTPRequestPoster.sendGetRequest("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=");
 		setData(new Gson().fromJson(s, Data.class));
 	}	
-		
-public void printData() {
-	List<Dane> da = data.getData();
-	for (Dane d : da) {
-		System.out.println(d.id);
-		System.out.println(d.filed_0);
-		System.out.println(d.filed_1);
-		System.out.println(d.filed_2);
-		System.out.println(d.filed_3);
-		System.out.println(d.filed_4);
-		System.out.println(d.filed_5);
-		System.out.println(d.filed_6);
-	}
-}
-//		Elements links = new Elements();
-//		for (String u : urls) {
-//			Document doc = Jsoup.connect(u).get();
-//			links.addAll(doc.select("a[href]"));
-//		}
-		
-//	}
-	
-//	public HTMLParser(String url, String keyword, String description, String word) throws IOException {
-//		this.url = url;
-//		this.keyword = keyword;
-//		this.description = description;
-//		this.word = word;
-//	}
 
-//	public void getLinksThatContains(String keyword) throws IOException {
-//		for(Element link : links) {
-//			String s = link.attr("abs:href");
-//			if(s.contains("/"+keyword+"/")) {			
-//				Document doc = Jsoup.connect(s).get();
-//				Elements els = doc.select("a[href]");
-//				tmpList.addAll(els);
-//			}
-//		}	
-//	}
-//	public void getLinksByDescription( String description, String word) {
-//		try {
-//			for(Element e: this.links) {
-//				String s = e.text();
-//				String l = e.attr("abs:href");
-//				if(l.contains(word)) {
-//					list.add(l);
-//				}
-//				else if(s.contains(description)) {
-//					list.add(l);
-//				}
-//			}
-//		}catch(NullPointerException e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
-//
-//	public ArrayList<URL> getPdfList() throws IOException {
-//		ArrayList<URL> pdfList = new ArrayList<URL>();
-//		for(String url : list) {
-//			URLConnection con = new URL( url ).openConnection();
-//			con.connect();
-//			InputStream is = con.getInputStream();
-//			pdfList.add(con.getURL());
-//			is.close();
-//			
-//		}
-//		return pdfList;
-//	}
-//	public void printLinks() {
-//		print("\nLinks: (%d)", links.size());
-//        for (Element link : links) {
-//            print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
-//        }
-//	}
-//	
-//	public void printMatchingLinks() {
-//		for( String s : list) {
-//			System.out.println(s);
-//		}
-//	}
-//	
-//	private static void print(String msg, Object... args) {
-//        System.out.println(String.format(msg, args));
-//    }
-//	
-//	private static String trim(String s, int width) {
-//        if (s.length() > width)
-//            return s.substring(0, width-1) + ".";
-//        else
-//            return s;
-//	}
-	
-	public HTTPRequestPoster getP() {
-		return p;
+	public void printData() {
+		List<Dane> da = data.getData();
+		for (Dane d : da) {
+//			System.out.println(d.id);
+//			System.out.println(d.filed_0);
+//			System.out.println(d.filed_1);
+//			System.out.println(d.filed_2);
+//			System.out.println(d.filed_3);
+//			System.out.println(d.filed_4);
+//			System.out.println(d.filed_5);
+			System.out.println(d.filed_6);
+		}
 	}
-	public void setP(HTTPRequestPoster p) {
-		this.p = p;
+
+	public HTTPRequestPoster getHTTPReqPst() {
+		return HTTPReqPst;
+	}
+	public void setHTTPReqPst(HTTPRequestPoster p) {
+		this.HTTPReqPst = p;
 	}
 
 
-	public Elements getLinks2() {
-		return links2;
+	public Elements getLinks() {
+		return links;
 	}
 
 
-	public void setLinks2(Elements links2) {
-		this.links2 = links2;
+	public void setLinks(Elements links) {
+		this.links = links;
 	}
 
 
@@ -169,8 +92,8 @@ public void printData() {
 		private int cur_page;
 		private int max_page;
 		private List<Dane> data;
-		
-		
+
+
 	}
 	class Dane {
 		private Long id;
@@ -230,20 +153,15 @@ public void printData() {
 		private String filed_5;
 		private String filed_6;
 	}
-	
-	
-	
-	
-//	private final ArrayList<String> list = new ArrayList<String>();
+
 	Document doc;
-	Elements links;
 	String url;
 	String keyword;
 	String description;
 	String word;
 	private Data data;
-	private HTTPRequestPoster p;
-	private Elements links2;
+	private HTTPRequestPoster HTTPReqPst;
+	private Elements links;
 
 
 }
