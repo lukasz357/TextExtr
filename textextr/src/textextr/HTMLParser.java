@@ -1,33 +1,93 @@
 package textextr;
 import java.io.IOException;
-import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class HTMLParser{
-	public HTMLParser() throws IOException {
-		setLinks(new Elements());
+	public HTMLParser(String url, String parameters) throws IOException {
 		setHTTPReqPst(new HTTPRequestPoster());
-		String s = HTTPRequestPoster.sendGetRequest("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=");
-		setData(new Gson().fromJson(s, Data.class));
-	}	
+		setUrls(new ArrayList<String>());
+		setParameters(parameters);
+		setUrl(url);
+		allData = new ArrayList<Data>(13);
 
+	}
+	public void getAllDatas() {
+		String s, parameters;
+//		for(int i = 1; 1<= 1; i++) {
+			parameters = this.getParameters()+"&page="+"1";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"2";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"3";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"4";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"5";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"6";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"7";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"8";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"9";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"10";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"11";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"12";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+			parameters = this.getParameters()+"&page="+"13";
+			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
+			allData.add(new Gson().fromJson(s, Data.class));
+//		}
+	}
+	public void extractPDFUrls() {
+		for(Data data : this.getAllData()) {
+			for(Dane d :data.getData()) {
+				urls.add(d.getFiled_6());
+			}
+		}
+	}
 	public void printData() {
 		List<Dane> da = data.getData();
 		for (Dane d : da) {
-//			System.out.println(d.id);
-//			System.out.println(d.filed_0);
-//			System.out.println(d.filed_1);
-//			System.out.println(d.filed_2);
-//			System.out.println(d.filed_3);
-//			System.out.println(d.filed_4);
-//			System.out.println(d.filed_5);
+			System.out.println(d.id);
+			System.out.println(d.filed_0);
+			System.out.println(d.filed_1);
+			System.out.println(d.filed_2);
+			System.out.println(d.filed_3);
+			System.out.println(d.filed_4);
+			System.out.println(d.filed_5);
 			System.out.println(d.filed_6);
 		}
 	}
 
+	public ArrayList<Data> getAllData() {
+		return allData;
+	}
+	public void setAllData(ArrayList<Data> allData) {
+		this.allData = allData;
+	}
+	
 	public HTTPRequestPoster getHTTPReqPst() {
 		return HTTPReqPst;
 	}
@@ -39,8 +99,6 @@ public class HTMLParser{
 	public Elements getLinks() {
 		return links;
 	}
-
-
 	public void setLinks(Elements links) {
 		this.links = links;
 	}
@@ -49,15 +107,40 @@ public class HTMLParser{
 	public Data getData() {
 		return data;
 	}
-
-
 	public void setData(Data data) {
 		this.data = data;
 	}
 
 
+	public ArrayList<String> getUrls() {
+		return urls;
+	}
+	public void setUrls(ArrayList<String> urls) {
+		this.urls = urls;
+	}
+
+
+	public String getParameters() {
+		return parameters;
+	}
+	public void setParameters(String parameters) {
+		this.parameters = parameters;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
 	class Data {
 		private List<String> headers;
+		private int records;
+		private int cur_page;
+		private int max_page;
+		private List<Dane> data;
 		public List<String> getHeaders() {
 			return headers;
 		}
@@ -88,15 +171,16 @@ public class HTMLParser{
 		public void setData(List<Dane> data) {
 			this.data = data;
 		}
-		private int records;
-		private int cur_page;
-		private int max_page;
-		private List<Dane> data;
-
-
 	}
 	class Dane {
 		private Long id;
+		private String filed_0;
+		private String filed_1;
+		private String filed_2;
+		private String filed_3;
+		private String filed_4;
+		private String filed_5;
+		private String filed_6;
 		public Long getId() {
 			return id;
 		}
@@ -145,23 +229,15 @@ public class HTMLParser{
 		public void setFiled_6(String filed_6) {
 			this.filed_6 = filed_6;
 		}
-		private String filed_0;
-		private String filed_1;
-		private String filed_2;
-		private String filed_3;
-		private String filed_4;
-		private String filed_5;
-		private String filed_6;
 	}
 
-	Document doc;
-	String url;
-	String keyword;
-	String description;
-	String word;
+	private String url;
+	private String parameters;
 	private Data data;
+	private ArrayList<Data> allData;
 	private HTTPRequestPoster HTTPReqPst;
 	private Elements links;
+	private ArrayList<String> urls;
 
 
 }

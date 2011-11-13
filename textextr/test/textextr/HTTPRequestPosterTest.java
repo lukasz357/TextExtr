@@ -6,7 +6,6 @@ public class HTTPRequestPosterTest {
 
 	private String result;
 	private HTTPRequestPoster p;
-
 	@Test
 	public void test() {
 		setP(new HTTPRequestPoster());
