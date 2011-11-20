@@ -8,8 +8,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import org.apache.log4j.*;
 
 public class URLDownloader {
+	private static Logger log = Logger.getLogger( HTMLParser.class );
 	final static int size=1024;
 	public static void fileUrl(String fAddress, String localFileName, String destinationDir) {
 		OutputStream outStream = null;
@@ -29,11 +31,13 @@ public class URLDownloader {
 				outStream.write(buf, 0, ByteRead);
 				ByteWritten += ByteRead;
 			}
-			System.out.println("Downloaded Successfully.");
+			log.info("Udalo sie pobrac");
+			System.out.println("Pobrano pomyślnie.");
 			System.out.println
-			("File name:\""+localFileName+ "\"\nNo ofbytes :" + ByteWritten);
+			("Nazwa: \""+localFileName+ "\"\nRozmiar: " + ByteWritten/1024 + "KB");
 		}
 		catch (Exception e) {
+			log.error("Blad podczas pobierania plików PDF");
 			e.printStackTrace();
 		}
 		finally {
@@ -49,7 +53,9 @@ public class URLDownloader {
 		int slashIndex =fAddress.lastIndexOf('/');
 		int periodIndex =fAddress.lastIndexOf('.');
 		String fileName=fAddress.substring(slashIndex + 1);
-		/*##########################TRUST MANAGER#################################################*/	
+		/*
+		 * Tworzy TrustManagera, który nie sprawdza czy certyfikat jest wiarygodny
+		 */
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[]{
 				new X509TrustManager() {
@@ -73,6 +79,7 @@ public class URLDownloader {
 		}
 		subscribe(fAddress);
 		/*###########################################################################*/		
+
 		if (periodIndex >=1 &&  slashIndex >= 0 
 				&& slashIndex < fAddress.length()-1)
 		{
@@ -82,28 +89,18 @@ public class URLDownloader {
 			System.err.println("path or file name.");
 		}
 	}
-	public static void main(String[] args) throws Exception
-	{
-
-		if(args.length==2) {
-			for (int i = 1; i < args.length; i++) {
-				fileDownload(args[i],args[0]);
-			}
-		}
-		else{
-
-		}
-	}
+	/*
+	 * Olewa błąd niezgodności hostname w certyfikacie - wyżej wywołanie funkcji subscribe()
+	 */
 	@SuppressWarnings({ "deprecation" })
 	public static String subscribe(String urlString) throws Exception{
 		String resp = "";
-//		String urlString="https://<www.nauka.gov.pl>/";
 		URL url;
 		URLConnection urlConn;
 		DataInputStream input;
 		String str = "";
 		try {
-			
+
 
 			// change proxy settings if required and enable the below lines
 			// sysProperties.put("proxyHost", "proxy.starhub.net.sg");

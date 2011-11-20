@@ -12,7 +12,7 @@ public class URLDownloaderTest {
 		p.getAllDatas();
 		p.extractPDFUrls();
 		for (String s : p.getUrls()) {
-			URLDownloader.fileDownload(s,"/home/lukasz357/BazaPDF");
+			URLDownloader.fileDownload(s,TextExtr.BASE_PATH);
 		}
 	}
 

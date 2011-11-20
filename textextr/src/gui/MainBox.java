@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -10,25 +8,27 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainBox {
 
 	private JFrame frmTextextr;
+	JButton btnUst;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainBox window = new MainBox();
-					window.frmTextextr.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public MainBox getMainBox(){
+		return this;
+	}
+	public JButton getBtnUst(){
+		return btnUst;
+	}
+
+	public JFrame getFrmTextextr() {
+		return frmTextextr;
+	}
+
+	public void setFrmTextextr(JFrame frmTextextr) {
+		this.frmTextextr = frmTextextr;
 	}
 
 	/**
@@ -53,7 +53,14 @@ public class MainBox {
 		
 		JPanel panel = new JPanel();
 		
-		JButton btnUst = new JButton("UST");
+		btnUst = new JButton("UST");
+		btnUst.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ConfigureBox cb = new ConfigureBox(getFrmTextextr(), getMainBox());
+				cb.showConfigureBox();
+//				btnUst.setEnabled(true);
+			}
+		});
 		GroupLayout groupLayout = new GroupLayout(frmTextextr.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -90,5 +97,7 @@ public class MainBox {
 		JPanel infoPanel = new JPanel();
 		tabbedPane.addTab("INFO", null, infoPanel, null);
 		frmTextextr.getContentPane().setLayout(groupLayout);
+		
 	}
+
 }

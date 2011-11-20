@@ -1,5 +1,7 @@
 package textextr;
 import java.io.IOException;
+
+import org.apache.log4j.*;
 import org.jsoup.select.Elements;
 import com.google.gson.Gson;
 
@@ -8,13 +10,13 @@ import java.util.List;
 
 
 public class HTMLParser{
+	private static Logger log = Logger.getLogger( HTMLParser.class );
 	public HTMLParser(String url, String parameters) throws IOException {
 		setHTTPReqPst(new HTTPRequestPoster());
 		setUrls(new ArrayList<String>());
 		setParameters(parameters);
 		setUrl(url);
 		allData = new ArrayList<Data>(13);
-
 	}
 	public void getAllDatas() {
 		String s, parameters;
@@ -58,6 +60,7 @@ public class HTMLParser{
 			parameters = this.getParameters()+"&page="+"13";
 			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
 			allData.add(new Gson().fromJson(s, Data.class));
+			if(log.isDebugEnabled())log.debug("Pomyslnie pobrano dane ze strony");
 //		}
 	}
 	public void extractPDFUrls() {

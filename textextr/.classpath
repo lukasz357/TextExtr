@@ -9,5 +9,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSoup"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PdfBox"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GSon"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Log4J"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SQLite"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
