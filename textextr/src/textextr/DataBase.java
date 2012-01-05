@@ -31,8 +31,8 @@ public class DataBase {
             													  "id_slowa_klucz		INTEGER NULL," +
             													  "linkDoStrony			VARCHAR(255))");
             
-            stat.executeUpdate("CREATE TABLE IF NOT EXISTS   urls(link_id 				INTEGER PRIMARY KEY," +
-            													   "url					VARCHAR (4000)");
+            stat.executeUpdate("CREATE TABLE IF NOT EXISTS   urls(url_id 				INTEGER PRIMARY KEY AUTOINCREMENT," +
+            													   "url					VARCHAR (4000))");
         } catch (SQLException ex) {
             log.error("Blad w konstruktorze DataBase()");
         	ex.printStackTrace();
@@ -67,10 +67,10 @@ public class DataBase {
         int i = 0;
         PreparedStatement prep;
 		try {
-			prep = conn.prepareStatement("insert into urls values (?);");
+			prep = conn.prepareStatement("insert into urls values (?, ?);");
 
-	        while (i < urls.size() - 1) {
-	            prep.setString(1, urls.get(i));
+	        while (i < urls.size()) {
+	            prep.setString(2, urls.get(i));
 	            prep.addBatch();
 	            i++;
 	        }
@@ -80,6 +80,7 @@ public class DataBase {
             conn.setAutoCommit(true);
         } catch (SQLException ex) {
             log.error("Nie udało się wczytać nowych adresów url");
+        	ex.printStackTrace();
         }
     }
 }
