@@ -10,6 +10,12 @@ import org.apache.log4j.*;
 public class TextExtr {
 	public static String BASE_PATH = "/home/lukasz357/TextExtrBase/";
 	private static Logger log;
+	
+	public TextExtr() {
+		// Configure log4j
+		PropertyConfigurator.configure(BASE_PATH+"log4j_mine.properties");
+		log = Logger.getLogger( TextExtr.class );
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -24,9 +30,7 @@ public class TextExtr {
 				}
 			}
 		});
-		// Configure log4j
-		PropertyConfigurator.configure(BASE_PATH+"log4j_mine.properties");
-		log = Logger.getLogger( TextExtr.class );
 		log.debug("Log4j has been initialized");
 	}
+	
 }

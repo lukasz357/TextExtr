@@ -8,19 +8,21 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.log4j.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class URLDownloader {
-	private static Logger log = Logger.getLogger( HTMLParser.class );
+	private static Log log = LogFactory.getLog(URLDownloader.class);
 	final static int size=1024;
 	public static void fileUrl(String fAddress, String localFileName, String destinationDir) {
 		OutputStream outStream = null;
 		URLConnection  uCon = null;
 		InputStream is = null;
+		URL Url = null;
+		byte[] buf = null;
+		int ByteRead,ByteWritten=0;
 		try {
-			URL Url;
-			byte[] buf;
-			int ByteRead,ByteWritten=0;
 			Url= new URL(fAddress);
 			outStream = new BufferedOutputStream(new FileOutputStream(destinationDir+"/"+localFileName));
 
@@ -213,6 +215,5 @@ public class URLDownloader {
 				sc.getSocketFactory());
 
 	}
-
 
 }
