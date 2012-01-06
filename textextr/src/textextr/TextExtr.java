@@ -24,12 +24,6 @@ public class TextExtr {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Class.forName("org.sqlite.JDBC");
-					DataBase db = new DataBase();
-					ArrayList<String> urls = db.getUrls();
-					Runnable r = new URLDownloaderRunnable("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=", urls, db);
-					Thread t = new Thread(r);
-					t.start();
 					MainBox window = new MainBox();
 					window.getFrmTextextr().setVisible(true);
 				} catch (Exception e) {

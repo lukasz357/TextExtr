@@ -2,6 +2,9 @@ package textextr;
 
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,15 +14,20 @@ public class URLDownloaderRunnable implements Runnable{
 	private String parameters = null;
 	private ArrayList<String> oldUrls = null;
 	private DataBase db = null;
-	public URLDownloaderRunnable(String url, String parameters, ArrayList<String> oldUrls, DataBase db) {
+	private JProgressBar bar;
+	private JLabel label;
+	public URLDownloaderRunnable(String url, String parameters, ArrayList<String> oldUrls, DataBase db, JProgressBar bar, JLabel label) {
 		this.url = url;
 		this.parameters = parameters;
 		this.oldUrls = oldUrls;
 		this.db = db;
+		this.bar = bar;
+		this.label = label;
 	}
 	@Override
-	public void run() {
+	public void run(){
 		try {
+			String result = "";
 			HTMLParser p = new HTMLParser(url, parameters);
 			p.getAllDatas();
 			p.extractPDFUrls();
@@ -28,13 +36,18 @@ public class URLDownloaderRunnable implements Runnable{
 					db.addNewUrl(s);
 					URLDownloader.fileDownload(s,TextExtr.BASE_PATH);
 				}
+				else {
+					result += result.length() < 1 ? s : ", "+s;
+				}
 			}
+			bar.setIndeterminate(false);
+			String str = "<html>" + "<font color=\"#008000\">" + "<b>" + 
+					 "Zakończono." + "</b>" + "</font>" + "</html>";
+			label.setText(str);
 			log.debug("Zakończono pobieranie plików");
-//			db.addNewUrls(newUrls);
 		} catch (Exception e) {
 			log.error("Problem podczas downloadu pliku");
 		}
-
 	}
 
 }
