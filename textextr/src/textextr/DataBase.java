@@ -32,7 +32,7 @@ public class DataBase {
             													  "linkDoStrony			VARCHAR(255))");
             
             stat.executeUpdate("CREATE TABLE IF NOT EXISTS   urls(url_id 				INTEGER PRIMARY KEY AUTOINCREMENT," +
-            													   "url					VARCHAR (4000))");
+            													   "url					VARCHAR (4000) UNIQUE)");
         } catch (SQLException ex) {
             log.error("Blad w konstruktorze DataBase()");
         	ex.printStackTrace();
@@ -43,7 +43,7 @@ public class DataBase {
         }
         log.info("Pomyślnie zainicjowano bazę danych");
     }
-    public ArrayList<String>getUrls(){
+    public ArrayList<String> getUrls(){
         ArrayList<String> urls = new ArrayList<String>();
         String url;
         
@@ -51,7 +51,7 @@ public class DataBase {
 		try {
 			rs = stat.executeQuery("SELECT * FROM urls;");
 	        while (rs.next()) {
-	            url = rs.getString(1);
+	            url = rs.getString(2);
 	            if(url != null)
 	            urls.add(url);
 	        }
@@ -74,13 +74,25 @@ public class DataBase {
 	            prep.addBatch();
 	            i++;
 	        }
-
             conn.setAutoCommit(false);
             prep.executeBatch();
             conn.setAutoCommit(true);
         } catch (SQLException ex) {
             log.error("Nie udało się wczytać nowych adresów url");
         	ex.printStackTrace();
+        }
+    }
+    public void addNewUrl(String url) {
+        try {
+            PreparedStatement prep = conn.prepareStatement("insert into urls values (?, ?);");
+            prep.setString(2, url);
+            prep.addBatch();
+            conn.setAutoCommit(false);
+            prep.executeBatch();
+            conn.setAutoCommit(true);
+        } catch (SQLException ex) {
+        	ex.printStackTrace();
+//        	log.error("Podany link znajduje się już w bazie");
         }
     }
 }

@@ -33,7 +33,7 @@ public class URLDownloader {
 				outStream.write(buf, 0, ByteRead);
 				ByteWritten += ByteRead;
 			}
-			log.info("Udalo sie pobrac");
+			log.debug("Udalo sie pobrac");
 			System.out.println("Pobrano pomyślnie.");
 			System.out.println
 			("Nazwa: \""+localFileName+ "\"\nRozmiar: " + ByteWritten/1024 + "KB");
