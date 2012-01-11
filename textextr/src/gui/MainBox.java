@@ -17,13 +17,8 @@ import javax.swing.JLabel;
 import textextr.DataBase;
 import textextr.URLDownloaderRunnable;
 import net.miginfocom.swing.MigLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import javax.swing.JProgressBar;
-import java.awt.GridBagLayout;
+import javax.swing.SwingConstants;
 
 public class MainBox {
 
@@ -140,8 +135,7 @@ public class MainBox {
 					Class.forName("org.sqlite.JDBC");
 
 					DataBase db = new DataBase();
-					ArrayList<String> urls = db.getUrls();
-					Runnable r = new URLDownloaderRunnable("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=", urls, db, progressBar, lblInfo);
+					Runnable r = new URLDownloaderRunnable("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=", db, progressBar, lblInfo);
 					Thread t = new Thread(r);
 					t.start();
 				} catch (ClassNotFoundException e) {
@@ -159,6 +153,28 @@ public class MainBox {
 		
 		JPanel infoPanel = new JPanel();
 		tabbedPane.addTab("INFO", null, infoPanel, null);
+		infoPanel.setLayout(new MigLayout("", "[][][][]", "[][][][][][]"));
+		
+		JLabel lblNazwaProgramu = new JLabel("Nazwa programu:");
+		lblNazwaProgramu.setHorizontalAlignment(SwingConstants.RIGHT);
+		infoPanel.add(lblNazwaProgramu, "cell 1 1");
+		
+		JLabel lblTextrextr = new JLabel("TextrExtr");
+		infoPanel.add(lblTextrextr, "cell 3 1");
+		
+		JLabel lblWersja = new JLabel("Wersja:");
+		lblWersja.setHorizontalAlignment(SwingConstants.RIGHT);
+		infoPanel.add(lblWersja, "cell 1 2");
+		
+		JLabel label = new JLabel("1.0");
+		infoPanel.add(label, "cell 3 2");
+		
+		JLabel lblAutor = new JLabel("Autor:");
+		lblAutor.setHorizontalAlignment(SwingConstants.RIGHT);
+		infoPanel.add(lblAutor, "cell 1 3");
+		
+		JLabel lblukaszKrok = new JLabel("Łukasz Krok");
+		infoPanel.add(lblukaszKrok, "cell 3 3");
 		frmTextextr.getContentPane().setLayout(groupLayout);
 		
 	}

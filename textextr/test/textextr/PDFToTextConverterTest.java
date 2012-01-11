@@ -5,15 +5,15 @@ import org.junit.Test;
 
 public class PDFToTextConverterTest {
 	PDFToTextConverter conv;
-	String filename;
+	String fileName;
 	@Before
 	public void setUp() {
-		filename = TextExtr.BASE_PATH+"/1_20120106.pdf";
+		fileName = TextExtr.BASE_PATH+"/aaaaa.pdf";
 		conv = new PDFToTextConverter();
 	}
 	@Test
 	public void testPdftoText() {
-		String s = conv.pdftoText(filename);
+		String s = conv.pdftoText(fileName);
 		System.out.println(s);
 	}
 

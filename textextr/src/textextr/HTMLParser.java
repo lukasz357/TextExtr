@@ -10,77 +10,48 @@ import java.util.List;
 
 
 public class HTMLParser{
-	private static Logger log = Logger.getLogger( HTMLParser.class );
+//	private static Logger log = Logger.getLogger( HTMLParser.class );
+	
+	private int max_page;
+	private int recordsNumber;
+	private String url;
+	private String parameters;
+	private Data tmpData;
+	private ArrayList<Data> allData;
+	private HTTPRequestPoster HTTPReqPst;
+	private Elements links;
+	private ArrayList<String> urls;
+	
 	public HTMLParser(String url, String parameters) throws IOException {
-		setHTTPReqPst(new HTTPRequestPoster());
-		setUrls(new ArrayList<String>());
-		setParameters(parameters);
-		setUrl(url);
-		allData = new ArrayList<Data>(13);
+		this.parameters = parameters;
+		this.url = url;
+		HTTPReqPst = new HTTPRequestPoster();
+		
+		String s = HTTPRequestPoster.sendGetRequest(url, parameters+"&page="+"1");
+		tmpData = new Gson().fromJson(s, Data.class);
+		
+		max_page = tmpData.getMax_page();
+		recordsNumber = tmpData.getRecords();
+		
+		urls = new ArrayList<String>(recordsNumber);
+		allData = new ArrayList<Data>(max_page);
 	}
+	
 	public void getAllDatas() {
 		String s, parameters;
-//		for(int i = 1; 1<= 1; i++) {
-			parameters = this.getParameters()+"&page="+"1";
+		
+		for(int i = 1; i <= max_page; i++) {
+			parameters = this.getParameters()+"&page="+i;
 			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
 			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"2";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"3";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"4";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"5";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"6";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"7";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"8";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"9";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"10";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"11";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"12";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			parameters = this.getParameters()+"&page="+"13";
-			s = HTTPRequestPoster.sendGetRequest(this.getUrl(), parameters);
-			allData.add(new Gson().fromJson(s, Data.class));
-			if(log.isDebugEnabled())log.debug("Pomyslnie pobrano dane ze strony");
-//		}
+		}
 	}
+	
 	public void extractPDFUrls() {
 		for(Data data : this.getAllData()) {
 			for(Dane d :data.getData()) {
 				urls.add(d.getFiled_6());
 			}
-		}
-	}
-	public void printData() {
-		List<Dane> da = data.getData();
-		for (Dane d : da) {
-			System.out.println(d.id);
-			System.out.println(d.filed_0);
-			System.out.println(d.filed_1);
-			System.out.println(d.filed_2);
-			System.out.println(d.filed_3);
-			System.out.println(d.filed_4);
-			System.out.println(d.filed_5);
-			System.out.println(d.filed_6);
 		}
 	}
 
@@ -107,11 +78,11 @@ public class HTMLParser{
 	}
 
 
-	public Data getData() {
-		return data;
+	public Data getTmpData() {
+		return tmpData;
 	}
-	public void setData(Data data) {
-		this.data = data;
+	public void setTmpData(Data data) {
+		this.tmpData = data;
 	}
 
 
@@ -137,7 +108,7 @@ public class HTMLParser{
 		this.url = url;
 	}
 
-
+//=========================
 	class Data {
 		private List<String> headers;
 		private int records;
@@ -175,6 +146,7 @@ public class HTMLParser{
 			this.data = data;
 		}
 	}
+//=========================
 	class Dane {
 		private Long id;
 		private String filed_0;
@@ -233,14 +205,4 @@ public class HTMLParser{
 			this.filed_6 = filed_6;
 		}
 	}
-
-	private String url;
-	private String parameters;
-	private Data data;
-	private ArrayList<Data> allData;
-	private HTTPRequestPoster HTTPReqPst;
-	private Elements links;
-	private ArrayList<String> urls;
-
-
 }

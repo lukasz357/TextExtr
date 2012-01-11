@@ -26,17 +26,17 @@ public class DataBaseTest {
 		list = null;
 	}
 	
-	@Test
-	public void test() throws ClassNotFoundException {
-		try{
-			list.add("sss");
-			list.add("sdas");
-			db.addNewUrls(list);
-			
-		}catch(NullPointerException e) {
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	public void test() throws ClassNotFoundException {
+//		try{
+//			list.add("sss");
+//			list.add("sdas");
+//			db.addNewFilesInfo(list);
+//			
+//		}catch(NullPointerException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	@Test
 	public void shouldReturnListOfUrls() {

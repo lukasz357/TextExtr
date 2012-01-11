@@ -50,6 +50,47 @@ public class URLDownloader {
 			catch (IOException e) {
 				e.printStackTrace();
 			}}}
+	public static void fileDownload(String fAddress, String destinationDir, String fileName) throws Exception	{
+
+//		int slashIndex =fAddress.lastIndexOf('/');
+//		int periodIndex =fAddress.lastIndexOf('.');
+//		String fileName=fAddress.substring(slashIndex + 1);
+		/*
+		 * Tworzy TrustManagera, który nie sprawdza czy certyfikat jest wiarygodny
+		 */
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[]{
+				new X509TrustManager() {
+					public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+						return null;
+					}
+					public void checkClientTrusted(
+							java.security.cert.X509Certificate[] certs, String authType) {
+					}
+					public void checkServerTrusted(
+							java.security.cert.X509Certificate[] certs, String authType) {
+					}
+				}
+		};
+		// Install the all-trusting trust manager
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+		}
+		subscribe(fAddress);
+		/*###########################################################################*/		
+
+//		if (periodIndex >=1 &&  slashIndex >= 0 
+//				&& slashIndex < fAddress.length()-1)
+//		{
+			fileUrl(fAddress,fileName,destinationDir);
+//		}
+//		else {
+//			System.err.println("path or file name.");
+//		}
+	}
 	public static void fileDownload(String fAddress, String destinationDir) throws Exception	{
 
 		int slashIndex =fAddress.lastIndexOf('/');

@@ -1,14 +1,11 @@
 package textextr;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
 public class Advertisement {
-	private static Logger log;
+//	private static Logger log;
 	
 	private Date dataOgloszenia;
 	private Date terminSklOfert;
@@ -17,25 +14,28 @@ public class Advertisement {
 	private String miasto;
 	private String opis;
 	private String stanowisko;
-	private List<String> slowaklucz;
-	private URL linkDoStrony;
+	private String [] slowaklucz;
+	private String linkDoStrony;
 	
-	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, List<String> sk ) {
+	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, String []  sk ) {
 		setDataOgloszenia(data);
 		setDyscyplinaNaukowa(dyscNauk);
 		setInstytucja(inst);
-		try {
-			setLinkDoStrony(new URL(url));
-		} catch (MalformedURLException e) {
-			log.error("Błąd z url " + url +" podczas tworzenia ogłoszenia");
-		}
+		setLinkDoStrony(url);
+//		try {
+//			setLinkDoStrony(new URL(url));
+//		} catch (MalformedURLException e) {
+//			log.error("Błąd z url " + url +" podczas tworzenia ogłoszenia");
+//		}
 		setMiasto(miasto);
 		setOpis(opis);
 		setStanowisko(stan);
 		setTerminSklOfert(termin);
 		setSlowaklucz(sk);
 	}
-
+	public Advertisement(){
+		
+	}
 	public Date getDataOgloszenia() {
 		return dataOgloszenia;
 	}
@@ -60,11 +60,11 @@ public class Advertisement {
 		this.instytucja = instytucja;
 	}
 
-	public URL getLinkDoStrony() {
+	public String getLinkDoStrony() {
 		return linkDoStrony;
 	}
 
-	public void setLinkDoStrony(URL linkDoStrony) {
+	public void setLinkDoStrony(String linkDoStrony) {
 		this.linkDoStrony = linkDoStrony;
 	}
 
@@ -100,11 +100,11 @@ public class Advertisement {
 		this.terminSklOfert = terminSklOfert;
 	}
 
-	public List<String> getSlowaklucz() {
+	public String []  getSlowaklucz() {
 		return slowaklucz;
 	}
 
-	public void setSlowaklucz(List<String> slowaklucz) {
+	public void setSlowaklucz(String []  slowaklucz) {
 		this.slowaklucz = slowaklucz;
 	}
 }

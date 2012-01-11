@@ -31,8 +31,10 @@ public class DataBase {
             													  "id_slowa_klucz		INTEGER NULL," +
             													  "linkDoStrony			VARCHAR(255))");
             
-            stat.executeUpdate("CREATE TABLE IF NOT EXISTS   urls(url_id 				INTEGER PRIMARY KEY AUTOINCREMENT," +
-            													   "url					VARCHAR (4000) UNIQUE)");
+            stat.executeUpdate("CREATE TABLE IF NOT EXISTS   filesInfo(file_id 			INTEGER PRIMARY KEY AUTOINCREMENT," +
+            													   "url					VARCHAR (4000) UNIQUE NOT NULL," +
+            													   "folder				VARCHAR (20)   NOT NULL,"+
+            													   "filename			VARCHAR (4000) NOT NULL)");
         } catch (SQLException ex) {
             log.error("Blad w konstruktorze DataBase()");
         	ex.printStackTrace();
@@ -49,7 +51,7 @@ public class DataBase {
         
         ResultSet rs;
 		try {
-			rs = stat.executeQuery("SELECT * FROM urls;");
+			rs = stat.executeQuery("SELECT * FROM filesInfo;");
 	        while (rs.next()) {
 	            url = rs.getString(2);
 	            if(url != null)
@@ -57,42 +59,70 @@ public class DataBase {
 	        }
 		} catch (SQLException e) {
 			log.error("Błąd podczas pobierania adresu url z bazy.");
+			e.printStackTrace();
 		}
         return urls;
     }
-    public void addNewUrls(ArrayList<String> urls) {
-        if (urls == null) {
-        	log.error("Nieprawidłowa lista adresów url");
-        }
-        int i = 0;
-        PreparedStatement prep;
+    public ArrayList<String> getFilenames(){
+        ArrayList<String> filenames = new ArrayList<String>();
+        String filename;
+        
+        ResultSet rs;
 		try {
-			prep = conn.prepareStatement("insert into urls values (?, ?);");
-
-	        while (i < urls.size()) {
-	            prep.setString(2, urls.get(i));
-	            prep.addBatch();
-	            i++;
+			rs = stat.executeQuery("SELECT * FROM filesInfo;");
+	        while (rs.next()) {
+	            filename = rs.getString(4);
+	            if(filename != null)
+	            filenames.add(filename);
 	        }
-            conn.setAutoCommit(false);
-            prep.executeBatch();
-            conn.setAutoCommit(true);
-        } catch (SQLException ex) {
-            log.error("Nie udało się wczytać nowych adresów url");
-        	ex.printStackTrace();
-        }
+		} catch (SQLException e) {
+			log.error("Błąd podczas pobierania nazw plików z bazy.");
+			e.printStackTrace();
+		}
+        return filenames;
     }
-    public void addNewUrl(String url) {
-        try {
-            PreparedStatement prep = conn.prepareStatement("insert into urls values (?, ?);");
+//    public void addNewFilesInfo(ArrayList<String> urls) {
+//        if (urls == null) {
+//        	log.error("Nieprawidłowa lista adresów url");
+//        }
+//        int i = 0;
+//        PreparedStatement prep;
+//		try {
+//			prep = conn.prepareStatement("insert into filesInfo values (?, ?, ?);");
+//
+//	        while (i < urls.size()) {
+//	        	String s = urls.get(i);
+//	        	int slashIndex = s.lastIndexOf('/');
+//	        	String filename = null;
+//	        	if(slashIndex != -1) {
+//	        		filename = s.substring(slashIndex +1);
+//	        	}
+//	            prep.setString(2, s);
+//	            prep.setString(3, filename);
+//	            prep.addBatch();
+//	            i++;
+//	        }
+//            conn.setAutoCommit(false);
+//            prep.executeBatch();
+//            conn.setAutoCommit(true);
+//        } catch (SQLException ex) {
+//            log.error("Nie udało się wczytać nowych adresów url");
+//        	ex.printStackTrace();
+//        }
+//    }
+    public void addNewFileInfo(String url, String folder, String filename) {
+        try {    
+            PreparedStatement prep = conn.prepareStatement("insert into filesInfo values (?, ?, ?, ?);");
             prep.setString(2, url);
+            prep.setString(3, folder);
+            prep.setString(4, filename);
             prep.addBatch();
             conn.setAutoCommit(false);
             prep.executeBatch();
             conn.setAutoCommit(true);
         } catch (SQLException ex) {
+        	log.error("Podany plik znajduje się już w bazie");
         	ex.printStackTrace();
-//        	log.error("Podany link znajduje się już w bazie");
         }
     }
 }

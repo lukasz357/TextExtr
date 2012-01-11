@@ -3,8 +3,6 @@ package textextr;
 import gui.MainBox;
 
 import java.awt.EventQueue;
-import java.util.ArrayList;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.*;
@@ -12,6 +10,7 @@ import org.apache.log4j.*;
 public class TextExtr {
 	private static Log log = LogFactory.getLog(TextExtr.class);
 	public static String BASE_PATH = "/home/lukasz357/TextExtrBase/";
+	public static String PDF_BASE_PATH = "/home/lukasz357/TextExtrBase/BazaPDF";
 	
 	public TextExtr() {
 		// Configure log4j
@@ -34,7 +33,4 @@ public class TextExtr {
 		log.debug("Log4j has been initialized");
 	}
 	
-//	private void getNewUrls(String url) {
-//		
-//	}
 }
