@@ -70,12 +70,15 @@ public class PDFToAdvertConverterTest {
 	
 	@Test public void convertionTest() {
 		PDFToAdvertConverter cnv;
-		String miasto, stanowisko, linkDoStrony, opis;
+		String instytucja, miasto, stanowisko, linkDoStrony, opis, status;
 		Date dataOgloszenia, terminSkladaniaOfert;
 		String [] slowaKluczowe;
 		for(String s : fileNames) {
 			log.info("************************** " + s +" **************************");
 			cnv = new PDFToAdvertConverter("20111102", s);
+			print("//===== INSTYTUCJA:");
+			if((instytucja = cnv.getInstytucja()) != null)
+				print(instytucja);
 			print("//===== MIASTO:");
 			if((miasto = cnv.getMiasto()) != null)
 				print(miasto);
@@ -98,6 +101,8 @@ public class PDFToAdvertConverterTest {
 			print("//===== OPIS:");
 			if((opis = cnv.getOpis()) != null)
 				print(opis);
+			if((status = cnv.getStatus()).length() > 0)
+				log.error("!!! "+s+ ": " + status + " nie zastosowano się do szablonu");
 		}
 	}
 	

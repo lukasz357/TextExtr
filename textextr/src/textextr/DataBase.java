@@ -26,7 +26,7 @@ public class DataBase {
             													  "dyscyplinaNaukowa	TEXT(1000)," +
             													  "instytucja			VARCHAR(255)," +
             													  "miasto				VARCHAR(255)," +
-            													  "opis					TEXT(1000)," +
+            													  "opis					TEXT(5000)," +
             													  "stanowisko			VARCHAR(255)," +
             													  "id_slowa_klucz		INTEGER NULL," +
             													  "linkDoStrony			VARCHAR(255))");

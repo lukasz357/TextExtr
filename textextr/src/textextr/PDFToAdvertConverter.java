@@ -10,10 +10,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dateFormat.W3CDateFormat;
-
 public class PDFToAdvertConverter {
 	private static Log log = LogFactory.getLog(PDFToAdvertConverter.class);
 	private Advertisement advert;
+	private String status;
 	private String text;
 	private String folder;
 	private String fileName;
@@ -22,6 +22,7 @@ public class PDFToAdvertConverter {
 		this.text = new PDFToTextConverter().pdftoText(TextExtr.PDF_BASE_PATH+"/"+fileName);
 		this.folder = folder;
 		this.fileName = fileName;
+		this.status = "";
 	}
 		
 	public Advertisement parseText() {
@@ -38,13 +39,17 @@ public class PDFToAdvertConverter {
 	
 	public String getInstytucja() {
 		String instytucja = "";
-		int inst = text.indexOf("INSTYTUCJA:");
-		int mst = text.indexOf("MIASTO:");
+		String replaced = "";
+		int inst = text.indexOf("INSTYTUCJA");
+		int mst = text.indexOf("MIASTO");
 		if(inst != -1 && mst != -1) {
 			instytucja = text.substring(inst + 11, mst - 1);
+			replaced = instytucja.replace("…", "").replace(".", "");
+			instytucja = replaced;
 		}
 		else {
-			log.error("!!! "+fileName+ " --- INSTYTUCJA: - nie zastosowano się do szablonu");
+			status += status.length() < 1 ? "INSTYTUCJA:" : ", INSTYTUCJA:";
+//			log.error("!!! "+fileName+ " --- INSTYTUCJA - nie zastosowano się do szablonu");
 		}
 		return instytucja.trim();
 	}
@@ -52,8 +57,8 @@ public class PDFToAdvertConverter {
 	public String getMiasto() {
 		String miasto  = "";
 		String miastoReplaced = "";
-		int mst = text.indexOf("MIASTO:");
-		int stn = text.indexOf("STANOWISKO:");
+		int mst = text.indexOf("MIASTO");
+		int stn = text.indexOf("STANOWISKO");
 		if(mst != -1 && stn != -1) {
 			miasto = text.substring(mst + 7, stn - 1);
 			miastoReplaced = miasto.replace(".", "");
@@ -115,54 +120,67 @@ public class PDFToAdvertConverter {
 			}else if (miasto.length() == 0){
 				miasto = null;
 			}else{
-				log.info("Nie dopasowano miasta: " + miasto + " z listy");//lub inne
+				status += status.length() < 1 ? "MIASTO:" : ", MIASTO:";
+//				log.info("Nie dopasowano miasta: " + miasto + " z listy");//lub inne
 			}
 		}
 		else {
-			log.error("!!! "+fileName+ " --- MIASTO: - nie zastosowano się do szablonu");
+			
+//			log.error("!!! "+fileName+ " --- MIASTO: - nie zastosowano się do szablonu");
 		}
 		return miasto;
 	}
 	
 	public String getStanowisko() {
 		String stanowisko = null;
-		int stn = text.indexOf("STANOWISKO:");
-		int dsc = text.indexOf("DYSCYPLINA NAUKOWA:");
+		int stn = text.indexOf("STANOWISKO");
+		int dsc = text.indexOf("DYSCYPLINA NAUKOWA");
 		if(stn != -1 && dsc != -1) {
 			stanowisko = text.substring(stn + 11, dsc - 1).trim();
 			if(stanowisko != null) {
 				if(stanowisko.length() == 0) {
 					stanowisko = "NIE PODANO STANOWISKA";
-				}else if(stanowisko.matches("/asyste/i")){
-					stanowisko = "asystent";
-				}else if (stanowisko.matches("/adiunk/i")){
-					stanowisko = "adiunkt";
-				}else if (stanowisko.matches("/wyk/i")){
-					stanowisko = "wykładowca";
-				}else if (stanowisko.matches("/prof/i")){
-					stanowisko = "profesor";
-				}else if (stanowisko.matches("/kierow/i")){
-					stanowisko = "kierownik";
-				}else if (stanowisko.matches("/lekt/i")){
-					stanowisko = "lektor";
+				}else if(stanowisko.matches("(?i)(?s).*asyst.*")){
+					stanowisko = "Asystent";
+				}else if (stanowisko.matches("(?i)(?s).*adiun.*")){
+					stanowisko = "Adiunkt";
+//				}else if (stanowisko.matches("(?i)(?s).*instrukt.*")){
+//					stanowisko = "Instruktor";
+				}else if (stanowisko.matches("(?i)(?s).*starszy w.*")){
+					stanowisko = "Starszy wykładowca";
+				}else if (stanowisko.matches("(?i)(?s).*wyk[lł].*")){
+					stanowisko = "Wykładowca";
+				}else if (stanowisko.matches("(?i)(?s).*profesor.*nad.*")){
+					stanowisko = "Profesor nadzwyczajny";
+				}else if (stanowisko.matches("(?i)(?s).*profesor.*zw.*")){
+					stanowisko = "Profesor zwyczajny";
+				}else if (stanowisko.matches("(?i)(?s).*prof.*")){
+					stanowisko = "Profesor";
+				}else if (stanowisko.matches("(?i)(?s).*kierown.*")){
+					stanowisko = "Kierownik";
+				}else if (stanowisko.matches("(?i)(?s).*lekto.*")){
+					stanowisko = "Lektor";
 				}else{
+					log.info("Nie dopasowano stanowiska: " + stanowisko + " z listy");
 				}
 			}
 		}
 		else {
-			log.error("!!! "+fileName+ " --- STANOWISKO: - nie zastosowano się do szablonu");
+			status += status.length() < 1 ? "STANOWISKO:" : ", STANOWISKO:";
+//			log.error("!!! "+fileName+ " --- STANOWISKO: - nie zastosowano się do szablonu");
 		}
 		return stanowisko;
 	}
 	
 	public String getLinkDoStrony() {
 		String linkDoStrony = "";
-		int lnk = text.indexOf("LINK DO STRONY:");
-		int slkl = text.indexOf("SŁOWA KLUCZOWE:");
+		int lnk = text.indexOf("LINK DO STRONY");
+		int slkl = text.indexOf("SŁOWA KLUCZOWE");
 		if(lnk != -1 && slkl != -1)
 			linkDoStrony = text.substring(lnk + 15 , slkl - 1);
 		else {
-			log.error("!!! "+fileName+ " --- LINK DO STRONY: - nie zastosowano się do szablonu");
+			status += status.length() < 1 ? "LINK DO STRONY:" : ", LINK DO STRONY:";
+//			log.error("!!! "+fileName+ " --- LINK DO STRONY: - nie zastosowano się do szablonu");
 		}
 		return linkDoStrony.trim();
 	}
@@ -173,7 +191,8 @@ public class PDFToAdvertConverter {
 		if(op != -1)
 			opis = text.substring(op + 36).trim();
 		else {
-			log.error("!!! "+fileName+ " --- OPIS: - nie zastosowano się do szablonu");
+			status += status.length() < 1 ? "OPIS:" : ", OPIS:";
+//			log.error("!!! "+fileName+ " --- OPIS: - nie zastosowano się do szablonu");
 		}
 		return opis;
 	}
@@ -226,7 +245,7 @@ public class PDFToAdvertConverter {
 	
 	public String [] getSlowaKluczowe() {
 		String [] slowa = null;
-		int slkl = text.indexOf("SŁOWA KLUCZOWE:");
+		int slkl = text.indexOf("SŁOWA KLUCZOWE");
 		int op = text.indexOf("OPIS");
 		if(slkl != -1 && op != -1) {
 			String sl = text.substring(slkl + 15, op -1).trim();
@@ -237,9 +256,13 @@ public class PDFToAdvertConverter {
 				log.error("Brak słów kluczowych");
 		}
 		else {
-			log.error("!!! "+fileName+ " --- OPIS: - nie zastosowano się do szablonu");
+			status += status.length() < 1 ? "SŁOWA KLUCZOWE:" : ", SŁOWA KLUCZOWE:";
+//			log.error("!!! "+fileName+ " --- SŁOWA KLUCZOWE: - nie zastosowano się do szablonu");
 		}
 		return slowa;
+	}
+	public String getStatus() {
+		return status;
 	}
 //	public String convertDate(String date) {
 //		String s = date.trim();
