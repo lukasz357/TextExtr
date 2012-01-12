@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -70,9 +71,9 @@ public class PDFToAdvertConverterTest {
 	
 	@Test public void convertionTest() {
 		PDFToAdvertConverter cnv;
-		String instytucja, miasto, stanowisko, linkDoStrony, opis, status;
+		String instytucja, miasto, stanowisko, dyscyplinaNaukowa, linkDoStrony, opis, status;
 		Date dataOgloszenia, terminSkladaniaOfert;
-		String [] slowaKluczowe;
+		List<String> slowaKluczowe;
 		for(String s : fileNames) {
 			log.info("************************** " + s +" **************************");
 			cnv = new PDFToAdvertConverter("20111102", s);
@@ -85,6 +86,9 @@ public class PDFToAdvertConverterTest {
 			print("//===== STANOWISKO:");
 			if((stanowisko = cnv.getStanowisko()) != null)
 				print(stanowisko);
+			print("//===== DYSCYPLINA NAUKOWA:");
+			if((dyscyplinaNaukowa = cnv.getDyscyplinaNaukowa()) != null)
+				print(dyscyplinaNaukowa);
 			print("//===== LINK DO STRONY:");
 			if((linkDoStrony = cnv.getLinkDoStrony())!= null)
 				print(linkDoStrony);

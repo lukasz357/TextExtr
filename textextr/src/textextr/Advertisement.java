@@ -1,5 +1,6 @@
 package textextr;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,10 +15,10 @@ public class Advertisement {
 	private String miasto;
 	private String opis;
 	private String stanowisko;
-	private String [] slowaklucz;
+	private ArrayList<String> slowaklucz;
 	private String linkDoStrony;
 	
-	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, String []  sk ) {
+	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, ArrayList<String>  sk ) {
 		setDataOgloszenia(data);
 		setDyscyplinaNaukowa(dyscNauk);
 		setInstytucja(inst);
@@ -100,11 +101,11 @@ public class Advertisement {
 		this.terminSklOfert = terminSklOfert;
 	}
 
-	public String []  getSlowaklucz() {
+	public ArrayList<String>  getSlowaklucz() {
 		return slowaklucz;
 	}
 
-	public void setSlowaklucz(String []  slowaklucz) {
+	public void setSlowaklucz(ArrayList<String> slowaklucz) {
 		this.slowaklucz = slowaklucz;
 	}
 }

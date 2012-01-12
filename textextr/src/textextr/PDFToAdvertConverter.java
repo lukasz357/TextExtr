@@ -3,7 +3,9 @@ package textextr;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -31,6 +33,7 @@ public class PDFToAdvertConverter {
 		advert.setStanowisko(getStanowisko());
 		advert.setDataOgloszenia(getDataOgloszenia());
 		advert.setTerminSklOfert(getTerminSkladaniaOfert());
+		advert.setDyscyplinaNaukowa(getDyscyplinaNaukowa());
 		advert.setLinkDoStrony(getLinkDoStrony());
 		advert.setSlowaklucz(getSlowaKluczowe());
 		advert.setOpis(getOpis());
@@ -41,10 +44,22 @@ public class PDFToAdvertConverter {
 		String instytucja = "";
 		String replaced = "";
 		int inst = text.indexOf("INSTYTUCJA");
+		if( inst == -1 ) {
+			inst = text.indexOf("Instytucja");
+		}
+		if( inst == -1 ) {
+			inst = text.indexOf("instytucja");
+		}
 		int mst = text.indexOf("MIASTO");
+		if(mst == -1) {
+			mst = text.indexOf("Miasto");
+		}
+		if(mst == -1) {
+			mst = text.indexOf("miasto");
+		}
 		if(inst != -1 && mst != -1) {
 			instytucja = text.substring(inst + 11, mst - 1);
-			replaced = instytucja.replace("…", "").replace(".", "");
+			replaced = instytucja.replace("…", "").replace(".", "").replaceAll("(?s) ", " ").replace("–", "");
 			instytucja = replaced;
 		}
 		else {
@@ -56,13 +71,25 @@ public class PDFToAdvertConverter {
 	
 	public String getMiasto() {
 		String miasto  = "";
-		String miastoReplaced = "";
+		String replaced = "";
 		int mst = text.indexOf("MIASTO");
+		if(mst == -1) {
+			mst = text.indexOf("Miasto");
+		}
+		if(mst == -1) {
+			mst = text.indexOf("miasto");
+		}
 		int stn = text.indexOf("STANOWISKO");
+		if(stn == -1) {
+			stn = text.indexOf("stanowisko");
+		}
+		if(stn == -1) {
+			stn = text.indexOf("Stanowisko");
+		}
 		if(mst != -1 && stn != -1) {
 			miasto = text.substring(mst + 7, stn - 1);
-			miastoReplaced = miasto.replace(".", "");
-			miasto = miastoReplaced.trim();
+			replaced = miasto.replace("…", "").replace(".", "").replace("–", "");
+			miasto = replaced.trim();
 			if(miasto.matches("(?i).*warsz.*")){
 				miasto = "Warszawa";
 			}else if (miasto.matches("(?i)wroc.*")){
@@ -132,11 +159,29 @@ public class PDFToAdvertConverter {
 	}
 	
 	public String getStanowisko() {
-		String stanowisko = null;
+		String stanowisko = "";
+		String replaced = "";
 		int stn = text.indexOf("STANOWISKO");
+		if(stn == -1) {
+			stn = text.indexOf("stanowisko");
+		}
+		if(stn == -1) {
+			stn = text.indexOf("Stanowisko");
+		}
 		int dsc = text.indexOf("DYSCYPLINA NAUKOWA");
+		if(dsc == -1) {
+			dsc = text.indexOf("dyscyplina naukowa");
+		}
+		if(dsc == -1) {
+			dsc = text.indexOf("Dyscyplina naukowa");
+		}
+		if(dsc == -1)
+			dsc = text.indexOf("DZIEDZINA SZTUKI");
+
 		if(stn != -1 && dsc != -1) {
 			stanowisko = text.substring(stn + 11, dsc - 1).trim();
+			replaced = stanowisko.replace("…", "").replace(".", "").replace("–", "");
+			stanowisko = replaced.trim();
 			if(stanowisko != null) {
 				if(stanowisko.length() == 0) {
 					stanowisko = "NIE PODANO STANOWISKA";
@@ -144,8 +189,8 @@ public class PDFToAdvertConverter {
 					stanowisko = "Asystent";
 				}else if (stanowisko.matches("(?i)(?s).*adiun.*")){
 					stanowisko = "Adiunkt";
-//				}else if (stanowisko.matches("(?i)(?s).*instrukt.*")){
-//					stanowisko = "Instruktor";
+				}else if (stanowisko.matches("(?i)(?s).*instrukt.*")){
+					stanowisko = "Instruktor";
 				}else if (stanowisko.matches("(?i)(?s).*starszy w.*")){
 					stanowisko = "Starszy wykładowca";
 				}else if (stanowisko.matches("(?i)(?s).*wyk[lł].*")){
@@ -172,24 +217,119 @@ public class PDFToAdvertConverter {
 		return stanowisko;
 	}
 	
+	public String getDyscyplinaNaukowa() {
+		String dyscyplinaNaukowa = "";
+		String replaced = "";
+		
+		int dsc = text.indexOf("DYSCYPLINA NAUKOWA");
+		if(dsc == -1) {
+			dsc = text.indexOf("dyscyplina naukowa");
+		}
+		if(dsc == -1) {
+			dsc = text.indexOf("Dyscyplina naukowa");
+		}
+		int dt = text.indexOf("DATA OGŁOSZENIA");
+		if(dt == -1) {
+			dt = text.indexOf("data ogłoszenia");
+		}
+		if(dt == -1) {
+			dt = text.indexOf("Data ogłoszenia");
+		}
+		if(dsc != -1 &&dt != -1) {
+			dyscyplinaNaukowa = text.substring(dsc + 19, dt -1);
+			replaced = dyscyplinaNaukowa.replace("…", "").replace(".", "").replace("–", "");
+			dyscyplinaNaukowa = replaced.trim();
+		}
+		else {
+			status += status.length() < 1 ? "DYSCYPLINA NAUKOWA:" : ", DYSCYPLINA NAUKOWA:";
+		}
+		return dyscyplinaNaukowa;
+	}
+	
 	public String getLinkDoStrony() {
 		String linkDoStrony = "";
+		String replaced = "";
 		int lnk = text.indexOf("LINK DO STRONY");
+		if(lnk == -1) {
+			lnk = text.indexOf("Link do strony");
+		}
+		if(lnk == -1) {
+			lnk = text.indexOf("link do strony");
+		}
 		int slkl = text.indexOf("SŁOWA KLUCZOWE");
-		if(lnk != -1 && slkl != -1)
+		if(slkl == -1) {
+			slkl = text.indexOf("słowa kluczowe");
+		}
+		if(slkl == -1) {
+			slkl = text.indexOf("Słowa kluczowe");
+		}
+		if(lnk != -1 && slkl != -1){
 			linkDoStrony = text.substring(lnk + 15 , slkl - 1);
+			replaced = linkDoStrony.replace("..", "").replace("–", "");
+			linkDoStrony = replaced.trim();
+		}
 		else {
 			status += status.length() < 1 ? "LINK DO STRONY:" : ", LINK DO STRONY:";
 //			log.error("!!! "+fileName+ " --- LINK DO STRONY: - nie zastosowano się do szablonu");
 		}
-		return linkDoStrony.trim();
+		return linkDoStrony;
+	}
+	
+	public ArrayList<String> getSlowaKluczowe() {
+		String [] slowaKluczowe = null;
+		ArrayList<String> slKluczowe = new ArrayList<String>();
+		String slowa = "";
+		String replaced = "";
+		String trimmed = "";
+		int slkl = text.indexOf("SŁOWA KLUCZOWE");
+		if(slkl == -1) {
+			slkl = text.indexOf("Słowa kluczowe");
+		}
+		if(slkl == -1) {
+			slkl = text.indexOf("słowa kluczowe");
+		}
+		int op = text.indexOf("OPIS");
+		if(op == -1) {
+			op = text.indexOf("Opis");
+		}
+		if(slkl != -1 && op != -1) {
+			slowa = text.substring(slkl + 15, op -1).trim();
+			replaced = slowa.replaceAll("[?!.,;:\\//]+", "#");
+			slowaKluczowe = replaced.split("#");
+			if(slowaKluczowe == null) 
+				log.error("Brak słów kluczowych");
+			else {
+				slKluczowe = new ArrayList<String>(Arrays.asList(slowaKluczowe));
+				for(int i = 0; i < slKluczowe.size(); i++) {
+					String slowo = slKluczowe.get(i);
+					if(slowo.length() <2)
+						slKluczowe.remove(i);
+					else {
+						trimmed = slowo.trim();
+						slKluczowe.set(i, trimmed);
+					}
+				}
+			}
+		}
+		else {
+			status += status.length() < 1 ? "SŁOWA KLUCZOWE:" : ", SŁOWA KLUCZOWE:";
+//			log.error("!!! "+fileName+ " --- SŁOWA KLUCZOWE: - nie zastosowano się do szablonu");
+		}
+		return slKluczowe;
 	}
 	
 	public String getOpis() {
 		String opis = "";
+		String replaced = "";
 		int op = text.indexOf("OPIS");
-		if(op != -1)
-			opis = text.substring(op + 36).trim();
+		if(op == -1) {
+			op = text.indexOf("Opis");
+		}
+		if(op != -1) {
+			opis = text.substring(op + 36);
+			replaced = opis.replace("", "-  ").replace("..", "");
+			opis = replaced.trim();
+		}
 		else {
 			status += status.length() < 1 ? "OPIS:" : ", OPIS:";
 //			log.error("!!! "+fileName+ " --- OPIS: - nie zastosowano się do szablonu");
@@ -243,24 +383,6 @@ public class PDFToAdvertConverter {
 		return d;
 	}
 	
-	public String [] getSlowaKluczowe() {
-		String [] slowa = null;
-		int slkl = text.indexOf("SŁOWA KLUCZOWE");
-		int op = text.indexOf("OPIS");
-		if(slkl != -1 && op != -1) {
-			String sl = text.substring(slkl + 15, op -1).trim();
-			sl.replace(", ", "#");
-			sl.replace(',', '#');
-			slowa = sl.split("#");
-			if(slowa == null)
-				log.error("Brak słów kluczowych");
-		}
-		else {
-			status += status.length() < 1 ? "SŁOWA KLUCZOWE:" : ", SŁOWA KLUCZOWE:";
-//			log.error("!!! "+fileName+ " --- SŁOWA KLUCZOWE: - nie zastosowano się do szablonu");
-		}
-		return slowa;
-	}
 	public String getStatus() {
 		return status;
 	}
