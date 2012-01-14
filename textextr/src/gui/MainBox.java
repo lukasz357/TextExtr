@@ -124,10 +124,11 @@ public class MainBox {
 		JLabel lblAktualizujBazOgloszen = new JLabel("Aktualizuj bazę ogłoszeń: ");
 		startPanel.add(lblAktualizujBazOgloszen, "cell 0 3,aligny baseline");
 		
-		JButton btnAktualizuj = new JButton("Aktualizuj");
+		final JButton btnAktualizuj = new JButton("Aktualizuj");
 		btnAktualizuj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				progressBar.setIndeterminate(true);
+				btnAktualizuj.setEnabled(false);
 				 String str = "<html>" + "<font color=\"#008000\">" + "<b>" + 
 						 "Trwa aktualizacja bazy ogłoszeń..." + "</b>" + "</font>" + "</html>";
 				lblInfo.setText(str);
@@ -135,7 +136,7 @@ public class MainBox {
 					Class.forName("org.sqlite.JDBC");
 
 					DataBase db = new DataBase();
-					Runnable r = new URLDownloaderRunnable("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=", db, progressBar, lblInfo);
+					Runnable r = new URLDownloaderRunnable("http://www.nauka.gov.pl/app/wyszukiwarka,24.html", "filed_0=&filed_1=&filed_2=&filed_3=&filed_4=", db, btnAktualizuj, progressBar, lblInfo);
 					Thread t = new Thread(r);
 					t.start();
 				} catch (ClassNotFoundException e) {

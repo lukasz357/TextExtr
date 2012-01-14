@@ -15,7 +15,8 @@ import org.apache.commons.logging.LogFactory;
 public class URLDownloader {
 	private static Log log = LogFactory.getLog(URLDownloader.class);
 	final static int size=1024;
-	public static void fileUrl(String fAddress, String localFileName, String destinationDir) {
+	public static boolean fileUrl(String fAddress, String localFileName, String destinationDir) {
+		boolean downloaded = false;
 		OutputStream outStream = null;
 		URLConnection  uCon = null;
 		InputStream is = null;
@@ -33,10 +34,11 @@ public class URLDownloader {
 				outStream.write(buf, 0, ByteRead);
 				ByteWritten += ByteRead;
 			}
-			log.debug("Udalo sie pobrac");
+//			log.debug("Udalo sie pobrac");
 			System.out.println("Pobrano pomyślnie.");
 			System.out.println
 			("Nazwa: \""+localFileName+ "\"\nRozmiar: " + ByteWritten/1024 + "KB");
+			downloaded = true;
 		}
 		catch (Exception e) {
 			log.error("Blad podczas pobierania plików PDF");
@@ -49,9 +51,10 @@ public class URLDownloader {
 			}
 			catch (IOException e) {
 				e.printStackTrace();
-			}}}
-	public static void fileDownload(String fAddress, String destinationDir, String fileName) throws Exception	{
-
+			}}
+			return downloaded;
+	}
+	public static boolean fileDownload(String fAddress, String destinationDir, String fileName) throws Exception	{
 //		int slashIndex =fAddress.lastIndexOf('/');
 //		int periodIndex =fAddress.lastIndexOf('.');
 //		String fileName=fAddress.substring(slashIndex + 1);
@@ -84,12 +87,14 @@ public class URLDownloader {
 
 //		if (periodIndex >=1 &&  slashIndex >= 0 
 //				&& slashIndex < fAddress.length()-1)
-//		{
-			fileUrl(fAddress,fileName,destinationDir);
+//		{	
+			boolean status = false;
+			status = fileUrl(fAddress,fileName,destinationDir);
 //		}
 //		else {
 //			System.err.println("path or file name.");
 //		}
+			return status;
 	}
 	public static void fileDownload(String fAddress, String destinationDir) throws Exception	{
 

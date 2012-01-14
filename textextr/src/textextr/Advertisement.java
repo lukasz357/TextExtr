@@ -2,12 +2,12 @@ package textextr;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class Advertisement {
 //	private static Logger log;
-	
+	private boolean parsingProblems;
+	private int fileInfoID;
 	private Date dataOgloszenia;
 	private Date terminSklOfert;
 	private String dyscyplinaNaukowa;
@@ -107,5 +107,26 @@ public class Advertisement {
 
 	public void setSlowaklucz(ArrayList<String> slowaklucz) {
 		this.slowaklucz = slowaklucz;
+	}
+	public int getFileInfoID() {
+		return fileInfoID;
+	}
+	public void setFileInfoID(int fileInfoID) {
+		this.fileInfoID = fileInfoID;
+	}
+	public boolean isParsingProblems() {
+		return parsingProblems;
+	}
+	public void setParsingProblems(boolean parsingProblems) {
+		this.parsingProblems = parsingProblems;
+	}
+	@Override
+	public String toString() {
+		return "Advertisement [dataOgloszenia=" + dataOgloszenia
+				+ ", terminSklOfert=" + terminSklOfert + ", dyscyplinaNaukowa="
+				+ dyscyplinaNaukowa + ", instytucja=" + instytucja
+				+ ", miasto=" + miasto + ", opis=" + opis + ", stanowisko="
+				+ stanowisko + ", slowaklucz=" + slowaklucz + ", linkDoStrony="
+				+ linkDoStrony + "]";
 	}
 }
