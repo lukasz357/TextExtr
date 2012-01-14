@@ -19,6 +19,7 @@ import textextr.URLDownloaderRunnable;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
+import java.awt.Cursor;
 
 public class MainBox {
 
@@ -52,8 +53,9 @@ public class MainBox {
 	 */
 	private void initialize() {
 		frmTextextr = new JFrame();
+		frmTextextr.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		frmTextextr.setMinimumSize(new Dimension(500, 200));
-		frmTextextr.setResizable(false);
+//		frmTextextr.setResizable(false);
 		frmTextextr.setTitle("TextExtr");
 		frmTextextr.setBounds(100, 100, 450, 300);
 		frmTextextr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,26 +72,27 @@ public class MainBox {
 		});
 		
 		JPanel statusPanel = new JPanel();
+		statusPanel.setMaximumSize(new Dimension(32767, 100));
 		GroupLayout groupLayout = new GroupLayout(frmTextextr.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+						.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(statusPanel, GroupLayout.PREFERRED_SIZE, 419, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+							.addComponent(statusPanel, GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnUst, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(statusPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(statusPanel, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnUst, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
