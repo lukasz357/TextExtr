@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.sql.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,7 +104,7 @@ public class DataBase {
     
     public boolean addAdverts(ArrayList<Advertisement> adverts) {
     	boolean ok = false;
-        PreparedStatement prep;
+        PreparedStatement prep, prep2, prep3;
         try {
 			prep = conn.prepareStatement("INSERT INTO adverts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 	
@@ -119,9 +122,36 @@ public class DataBase {
 	            prep.addBatch();
 	        }
         
-            conn.setAutoCommit(false);
+//            conn.setAutoCommit(false);
             prep.executeBatch();
-            conn.setAutoCommit(true);
+//            conn.setAutoCommit(true);
+            int fileInfoID, id;
+          HashMap<Integer, Integer> ids = new HashMap<Integer, Integer>();
+            ResultSet rs = stat.executeQuery("SELECT * FROM adverts");
+            while(rs.next()) {
+            	id = rs.getInt(1);
+            	fileInfoID = rs.getInt(11);
+            	ids.put(fileInfoID, id);
+            }
+            prep3 = conn.prepareStatement("INSERT INTO slowaKluczowe VALUES (?, ?, ?);");
+            int idd;
+            for(Advertisement a : adverts) {
+            	idd = a.getFileInfoID();           	
+            	if(a.getSlowaklucz() != null) {
+	            	for(String s : a.getSlowaklucz()) {
+	            		if(s != null) {
+		            		prep3.setString(2, s);
+		            		prep3.setInt(3, ids.get(idd));
+		            		prep3.addBatch();
+	            		}
+	            	}
+            	}
+            }
+
+          conn.setAutoCommit(false);
+          prep3.executeBatch();
+          conn.setAutoCommit(true);
+
             ok = true;
         } catch (SQLException ex) {
             log.error("Problem podczas wczytywania do bazy");
@@ -187,6 +217,57 @@ public class DataBase {
 		return ok;
     }
     
+    public HashMap<Integer, Advertisement> getAdvertisements(String position) {
+    	PreparedStatement prep, prep2;
+    	int ad_id;
+    	Date dataOgloszenia;
+    	Date terminSklOfert;
+    	String dyscyplinaNaukowa;
+    	String instytucja;
+    	String miasto;
+    	String opis;
+    	String stanowisko;
+    	String linkDoStrony;
+    	boolean parsingProblems;
+    	int file_identity;
+    	HashMap<Integer, Advertisement> adverts = new HashMap<Integer, Advertisement>();
+    	try {
+    		prep = conn.prepareStatement("SELECT * FROM adverts WHERE UPPER(stanowisko) = UPPER(?)");
+    		prep.setString(1, position);
+    		ResultSet rs = prep.executeQuery();
+    		while(rs.next()) {
+    			ad_id = rs.getInt(1);
+    			dataOgloszenia = rs.getDate(2);
+    			terminSklOfert = rs.getDate(3);
+    			dyscyplinaNaukowa = rs.getString(4);
+    			instytucja = rs.getString(5);
+    			miasto = rs.getString(6);
+    			opis = rs.getString(7);
+    			stanowisko = rs.getString(8);
+    			linkDoStrony = rs.getString(9);
+    			parsingProblems = rs.getBoolean(10);
+    			file_identity = rs.getInt(11);
+    			Advertisement adv = new Advertisement(ad_id, dataOgloszenia, dyscyplinaNaukowa, instytucja, linkDoStrony, miasto, opis, stanowisko, terminSklOfert, new ArrayList<String>(), parsingProblems, file_identity);
+    			adverts.put(ad_id, adv);
+    		}
+    		
+    		ResultSet rset = stat.executeQuery("SELECT * FROM slowaKluczowe");
+    		int adID;
+    		String sl;
+    		while(rset.next()) {
+    			sl = rset.getString(2);
+    			adID = rset.getInt(3);
+    			if(adverts.containsKey(adID)) {
+    				adverts.get(adID).getSlowaklucz().add(sl);
+    			}
+    		}
+    		
+    	}catch (SQLException e) {
+			log.error("Nieudało się pobtać ogłoszeń.");
+			e.printStackTrace();
+		}
+    	return adverts;
+    }
     
     public void rollback() {
     	try {

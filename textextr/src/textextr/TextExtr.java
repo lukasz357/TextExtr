@@ -11,6 +11,7 @@ public class TextExtr {
 	private static Log log = LogFactory.getLog(TextExtr.class);
 	public static String BASE_PATH = "/home/lukasz357/TextExtrBase/";
 	public static String PDF_BASE_PATH = "/home/lukasz357/TextExtrBase/BazaPDF";
+	public static String OUTPUT_HTML_PATH = "/home/lukasz357/TextExtrBase/OutputHTMLFiles";
 	
 	public TextExtr() {
 		// Configure log4j

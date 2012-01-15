@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class Advertisement {
 //	private static Logger log;
+	private int advertID;
 	private boolean parsingProblems;
 	private int fileInfoID;
 	private Date dataOgloszenia;
@@ -18,7 +19,7 @@ public class Advertisement {
 	private ArrayList<String> slowaklucz;
 	private String linkDoStrony;
 	
-	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, ArrayList<String>  sk ) {
+	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, ArrayList<String>  sk) {
 		setDataOgloszenia(data);
 		setDyscyplinaNaukowa(dyscNauk);
 		setInstytucja(inst);
@@ -34,6 +35,27 @@ public class Advertisement {
 		setTerminSklOfert(termin);
 		setSlowaklucz(sk);
 	}
+	
+	public Advertisement(int advertID, Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, ArrayList<String>  sk, boolean parsingProblems, int file_identity) {
+		setAdvertID(advertID);
+		setDataOgloszenia(data);
+		setDyscyplinaNaukowa(dyscNauk);
+		setInstytucja(inst);
+		setLinkDoStrony(url);
+//		try {
+//			setLinkDoStrony(new URL(url));
+//		} catch (MalformedURLException e) {
+//			log.error("Błąd z url " + url +" podczas tworzenia ogłoszenia");
+//		}
+		setMiasto(miasto);
+		setOpis(opis);
+		setStanowisko(stan);
+		setTerminSklOfert(termin);
+		setSlowaklucz(sk);
+		setParsingProblems(parsingProblems);
+		setFileInfoID(file_identity);
+	}
+	
 	public Advertisement(){
 		
 	}
@@ -120,6 +142,14 @@ public class Advertisement {
 	public void setParsingProblems(boolean parsingProblems) {
 		this.parsingProblems = parsingProblems;
 	}
+	public int getAdvertID() {
+		return advertID;
+	}
+
+	public void setAdvertID(int advertID) {
+		this.advertID = advertID;
+	}
+
 	@Override
 	public String toString() {
 		return "Advertisement [dataOgloszenia=" + dataOgloszenia

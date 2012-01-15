@@ -35,7 +35,6 @@ public class URLDownloaderRunnable implements Runnable{
 	@Override
 	public void run(){
 		try {
-//			this.db = new DataBase();
 			int lastSlashIndex = -1;
 			int slashBeforeLastSlash = -1;
 			String fileName = null;
@@ -74,28 +73,20 @@ public class URLDownloaderRunnable implements Runnable{
 					fileName = randomPrefix += fileName;
 				}
 				newFilesNames.add(fileName);
-//				int id = 0;
 				if(!oldUrls.contains(s)) {
 					db.addNewFileInfo(s, fileName, folder);
-	//				if(id > 0) {
-//						URLDownloader.fileDownload(s,TextExtr.PDF_BASE_PATH, fileName);
-//						db.updateFileInfo(id, true);
-	//				}
 				}
 				
 			}
 			
 			ArrayList<FileInfo> list = db.getFileInfos();
-//			log.info("Rozmiar listy: "+list.size());
 			boolean downloaded;
 			for(FileInfo f : list) {
 				downloaded = false;
-//				log.info("Plik pobrany? - " + f.isDownloaded());
 				if(!f.isDownloaded()) {
 					downloaded = URLDownloader.fileDownload(f.getUrl(),TextExtr.PDF_BASE_PATH, f.getFileName());
 					if(downloaded) {
 						db.updateFileInfoDownloaded(f.getId(), true);
-//						log.info("Udany update pliku: " +f.getId());
 					}
 				}
 			}
