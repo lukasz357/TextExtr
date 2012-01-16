@@ -1,7 +1,7 @@
 package gui;
 
-import HyperlinkCellRenderer;
-import OscarCellRenderers;
+//import HyperlinkCellRenderer;
+//import OscarCellRenderers;
 
 import java.awt.Dimension;
 import javax.swing.GroupLayout;
@@ -32,7 +32,7 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JTextField;
 
-import TableDemo.IMDBLinkAction;
+//import TableDemo.IMDBLinkAction;
 
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
