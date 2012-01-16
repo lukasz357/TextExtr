@@ -230,9 +230,10 @@ public class DataBase {
     	String linkDoStrony;
     	boolean parsingProblems;
     	int file_identity;
+    	String url;
     	HashMap<Integer, Advertisement> adverts = new HashMap<Integer, Advertisement>();
     	try {
-    		prep = conn.prepareStatement("SELECT * FROM adverts WHERE UPPER(stanowisko) = UPPER(?)");
+    		prep = conn.prepareStatement("SELECT * FROM adverts left outer join filesInfo on adverts.file_identity = filesInfo.file_id WHERE UPPER(adverts.stanowisko) = UPPER(?)");
     		prep.setString(1, position);
     		ResultSet rs = prep.executeQuery();
     		while(rs.next()) {
@@ -247,7 +248,8 @@ public class DataBase {
     			linkDoStrony = rs.getString(9);
     			parsingProblems = rs.getBoolean(10);
     			file_identity = rs.getInt(11);
-    			Advertisement adv = new Advertisement(ad_id, dataOgloszenia, dyscyplinaNaukowa, instytucja, linkDoStrony, miasto, opis, stanowisko, terminSklOfert, new ArrayList<String>(), parsingProblems, file_identity);
+    			url = rs.getString(13);
+    			Advertisement adv = new Advertisement(ad_id, dataOgloszenia, dyscyplinaNaukowa, instytucja, linkDoStrony, miasto, opis, stanowisko, terminSklOfert, new ArrayList<String>(), parsingProblems, file_identity, url);
     			adverts.put(ad_id, adv);
     		}
     		

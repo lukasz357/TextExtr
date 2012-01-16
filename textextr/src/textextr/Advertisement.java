@@ -18,6 +18,7 @@ public class Advertisement {
 	private String stanowisko;
 	private ArrayList<String> slowaklucz;
 	private String linkDoStrony;
+	private String url;
 	
 	public Advertisement(Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, ArrayList<String>  sk) {
 		setDataOgloszenia(data);
@@ -54,6 +55,26 @@ public class Advertisement {
 		setSlowaklucz(sk);
 		setParsingProblems(parsingProblems);
 		setFileInfoID(file_identity);
+	}
+	public Advertisement(int advertID, Date data, String dyscNauk, String inst, String url, String miasto, String opis, String stan, Date termin, ArrayList<String>  sk, boolean parsingProblems, int file_identity, String fileUrl) {
+		setAdvertID(advertID);
+		setDataOgloszenia(data);
+		setDyscyplinaNaukowa(dyscNauk);
+		setInstytucja(inst);
+		setLinkDoStrony(url);
+//		try {
+//			setLinkDoStrony(new URL(url));
+//		} catch (MalformedURLException e) {
+//			log.error("Błąd z url " + url +" podczas tworzenia ogłoszenia");
+//		}
+		setMiasto(miasto);
+		setOpis(opis);
+		setStanowisko(stan);
+		setTerminSklOfert(termin);
+		setSlowaklucz(sk);
+		setParsingProblems(parsingProblems);
+		setFileInfoID(file_identity);
+		setUrl(fileUrl);
 	}
 	
 	public Advertisement(){
@@ -148,6 +169,14 @@ public class Advertisement {
 
 	public void setAdvertID(int advertID) {
 		this.advertID = advertID;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override

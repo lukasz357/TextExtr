@@ -56,47 +56,56 @@ public class HTMLView {
 	        out.write("<div style=\"margin:2em;\">\n");
 	        
 	        out.write("<table>\n");
+	        Advertisement adv;
 	        for (int i = 0; i < adverts.size(); i++) {
+	        	adv = adverts.get(i);
+	        	if(adv.isParsingProblems()) {
+		        	out.write("<tr>");
+		        	out.write("<td colspan=\"3\" style=\"color: red; text-align: center; font-size: larger\">");
+		        	out.write("Poniższe ogłoszenie nie było zgodne z szablonem. Oryginalny plik możesz znależć: <a href=\"" + adv.getUrl() + "\">TUTAJ</a>");
+		        	out.write("</td>");
+		        	out.write("</tr>\n");
+	        	}
 	        	out.write("<tr>");
 	        	out.write("<td class = \"bold text-top\">"+(i+1)+".</td>");
 	        	out.write("<td class = \"mylen\">INSTYTUCJA:</td>");
-	        	out.write("<td>" + adverts.get(i).getInstytucja() + "</td>");
+	        	out.write("<td>" + adv.getInstytucja() + "</td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">MIASTO:</td>");
-	        	out.write("<td>" + adverts.get(i).getMiasto() + "</td>");
+	        	out.write("<td>" + adv.getMiasto() + "</td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">STANOWISKO:</td>");
-	        	out.write("<td>" + adverts.get(i).getStanowisko() + "</td>");
+	        	out.write("<td>" + adv.getStanowisko() + "</td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">DYSCYPLINA NAUKOWA:</td>");
-	        	out.write("<td>" + adverts.get(i).getDyscyplinaNaukowa() + "</td>");
+	        	out.write("<td>" + adv.getDyscyplinaNaukowa() + "</td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">DATA OGŁOSZENIA:</td>");
-	        	out.write("<td>" + adverts.get(i).getDataOgloszenia() + "</td>");
+	        	out.write("<td>" + adv.getDataOgloszenia() + "</td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">TERMIN SKŁADANIA OFERT:</td>");
-	        	out.write("<td>" + adverts.get(i).getTerminSklOfert() + "</td>");
+	        	out.write("<td>" + adv.getTerminSklOfert() + "</td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">LINK DO STRONY:</td>");
-	        	out.write("<td><a href=\"" + adverts.get(i).getLinkDoStrony() + "\">"+adverts.get(i).getLinkDoStrony()+"</a></td>");
+	        	out.write("<td><a href=\"" + adv.getLinkDoStrony() + "\">"+adverts.get(i).getLinkDoStrony()+"</a></td>");
 	        	out.write("</tr>\n");
 	        	
 	        	out.write("<tr>");
@@ -104,7 +113,7 @@ public class HTMLView {
 	        	out.write("<td class = \"mylen\">SŁOWA KLUCZOWE:</td>");
 	        	out.write("<td>");
 	        	out.write("<ul>");
-	        	for(String s : adverts.get(i).getSlowaklucz())
+	        	for(String s : adv.getSlowaklucz())
 	        		out.write("<li>" + s + "</li>");
 	        	out.write("</ul>");
 	        	out.write("</td>");
@@ -113,7 +122,7 @@ public class HTMLView {
 	        	out.write("<tr>");
 	        	out.write("<td>&nbsp;</td>");
 	        	out.write("<td class = \"mylen\">OPIS:</td>");
-	        	out.write("<td>" + adverts.get(i).getOpis() + "</td>");
+	        	out.write("<td>" + adv.getOpis() + "</td>");
 	        	out.write("</tr>\n");
 	        	out.write("<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>");
 	        	
