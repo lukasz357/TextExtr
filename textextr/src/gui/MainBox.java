@@ -1,5 +1,8 @@
 package gui;
 
+import HyperlinkCellRenderer;
+import OscarCellRenderers;
+
 import java.awt.Dimension;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -7,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,11 +24,35 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import javax.swing.JTable;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.JTextField;
+
+import TableDemo.IMDBLinkAction;
+
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 public class MainBox {
 
 	private JFrame frmTextextr;
 	JButton btnUst;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTable table;
 
 	public MainBox getMainBox(){
 		return this;
@@ -57,7 +85,7 @@ public class MainBox {
 		frmTextextr.setMinimumSize(new Dimension(500, 200));
 //		frmTextextr.setResizable(false);
 		frmTextextr.setTitle("TextExtr");
-		frmTextextr.setBounds(100, 100, 450, 300);
+		frmTextextr.setBounds(100, 100, 1101, 632);
 		frmTextextr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -152,8 +180,162 @@ public class MainBox {
 		JPanel szukajPanel= new JPanel();
 		tabbedPane.addTab("SZUKAJ", null, szukajPanel, null);
 		
-		JPanel przetwPanel = new JPanel();
-		tabbedPane.addTab("PRZETW.", null, przetwPanel, null);
+		JPanel panel = new JPanel();
+		
+		JPanel panel_1 = new JPanel();
+		GroupLayout gl_szukajPanel = new GroupLayout(szukajPanel);
+		gl_szukajPanel.setHorizontalGroup(
+			gl_szukajPanel.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+		);
+		gl_szukajPanel.setVerticalGroup(
+			gl_szukajPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_szukajPanel.createSequentialGroup()
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+		);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		
+		JLabel lblStanowisko = new JLabel("Stanowisko");
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		
+		JLabel lblMiasto = new JLabel("Miasto");
+		
+		JLabel lblInstytucja = new JLabel("Instytucja");
+		
+		JLabel lblDyscNaukowa = new JLabel("Dysc. naukowa");
+		
+		JLabel lblSowoKluczowe = new JLabel("Słowo kluczowe");
+		
+		JDateChooser dtChDataOgloszenia = new JDateChooser();
+		
+		JLabel lblDataOgoszenia = new JLabel("Data ogłoszenia");
+		
+		JDateChooser dtChTerminSklOfert = new JDateChooser();
+		
+		JLabel lblTerminSklOfert = new JLabel("Termin skl. ofert");
+		
+		JButton btnSzukaj = new JButton("Szukaj");
+		btnSzukaj.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO 
+			}
+		});
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblStanowisko))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblMiasto))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblInstytucja))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblDyscNaukowa))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblSowoKluczowe))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblDataOgoszenia)
+						.addComponent(dtChDataOgloszenia, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTerminSklOfert)
+						.addComponent(dtChTerminSklOfert, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addComponent(btnSzukaj)
+					.addContainerGap(56, Short.MAX_VALUE))
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblStanowisko)
+								.addComponent(lblMiasto)
+								.addComponent(lblInstytucja)
+								.addComponent(lblDyscNaukowa)
+								.addComponent(lblSowoKluczowe)
+								.addComponent(lblDataOgoszenia)
+								.addComponent(lblTerminSklOfert))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+											.addComponent(textField, GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
+											.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+										.addComponent(dtChDataOgloszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(19))
+								.addComponent(dtChTerminSklOfert, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnSzukaj)))
+					.addContainerGap())
+		);
+		panel.setLayout(gl_panel);
+		panel_1.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Lp.", "Stanowisko", "Miasto", "Instytucja", "Dysc. naukowa", "S\u0142owa kluczowe", "Data og\u0142oszenia", "Termin skl. ofert"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Integer.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+//		table.getColumnModel().getColumn(6).setResizable(false);
+		table.setColumnModel(createColumnModel());
+		table.setAutoCreateRowSorter(true);
+		table.setRowHeight(26);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setIntercellSpacing(new Dimension(0, 0));
+		panel_1.add(table, "cell 0 0,grow");
+		szukajPanel.setLayout(gl_szukajPanel);
 		
 		JPanel infoPanel = new JPanel();
 		tabbedPane.addTab("INFO", null, infoPanel, null);
@@ -182,4 +364,43 @@ public class MainBox {
 		frmTextextr.getContentPane().setLayout(groupLayout);
 		
 	}
+    protected TableColumnModel createColumnModel() {
+        DefaultTableColumnModel columnModel = new DefaultTableColumnModel();
+
+//        TableCellRenderer cellRenderer = new OscarCellRenderers.RowRenderer(getTableRowColors());
+
+        TableColumn column = new TableColumn();
+        column.setModelIndex(1);
+        column.setHeaderValue("Stanowisko");
+        column.setPreferredWidth(26);
+//        column.setCellRenderer(new OscarCellRenderers.YearRenderer(getTableRowColors()));
+        columnModel.addColumn(column);
+
+        column = new TableColumn();
+        column.setModelIndex(2);
+        column.setHeaderValue("Miasto");
+        column.setPreferredWidth(100);
+//        column.setCellRenderer(cellRenderer);
+        columnModel.addColumn(column);
+
+        column = new TableColumn();
+        column.setModelIndex(3);
+        column.setHeaderValue("Instytucja");
+        column.setPreferredWidth(180);
+//        HyperlinkCellRenderer hyperlinkRenderer =
+//                new OscarCellRenderers.MovieRenderer(new IMDBLinkAction(),
+//                        true, getTableRowColors());
+//        hyperlinkRenderer.setRowColors(getTableRowColors());
+//        column.setCellRenderer(hyperlinkRenderer);
+        columnModel.addColumn(column);
+
+        column = new TableColumn();
+        column.setModelIndex(4);
+        column.setHeaderValue("Dyscyplina naukowa");
+        column.setPreferredWidth(120);
+//        column.setCellRenderer(new OscarCellRenderers.NomineeRenderer(getTableRowColors()));
+        columnModel.addColumn(column);
+
+        return columnModel;
+    }
 }
