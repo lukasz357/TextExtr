@@ -368,6 +368,7 @@ public class PDFToAdvertConverter {
 		} catch (ParseException e) {
 			log.error("problem z parsowaniem daty ogłoszenia: " + folder);
 			e.printStackTrace();
+			d = null;
 		}
 		return d;
 	}
@@ -384,6 +385,7 @@ public class PDFToAdvertConverter {
 		} catch (ParseException e) {
 			log.error("problem z parsowaniem daty terminu składania ofert: " + data);
 			e.printStackTrace();
+			d = null;
 		}
 		return d;
 	}

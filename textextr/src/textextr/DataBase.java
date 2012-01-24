@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ public class DataBase {
         try {
             conn = DriverManager.getConnection("jdbc:sqlite:TextExtrDB.db");
             stat = conn.createStatement();
+//            stat.executeUpdate("CREATE TEMP TABLE adIds(adId INTEGER)");
             stat.executeUpdate("CREATE TABLE IF NOT EXISTS   filesInfo(file_id 			INTEGER PRIMARY KEY AUTOINCREMENT," +
             												     	  "url				VARCHAR (4000) UNIQUE," +
             												     	  "fileName			VARCHAR (2000)," +
@@ -266,6 +268,134 @@ public class DataBase {
     		
     	}catch (SQLException e) {
 			log.error("Nieudało się pobtać ogłoszeń.");
+			e.printStackTrace();
+		}
+    	return adverts;
+    }
+    
+    public HashMap<Integer, Advertisement> getAdvertisements(Advertisement advert) {
+    	System.out.println("In getAdvertisements");
+    	PreparedStatement prep, prep2;
+    	int ad_id;
+    	Date dataOgloszenia;
+    	long dataOglosz = 0;
+    	Date terminSklOfert;
+    	long termSklOf = 0;
+    	String dyscyplinaNaukowa;
+    	String instytucja;
+    	String miasto;
+    	String opis;
+    	String stanowisko;
+    	String linkDoStrony;
+    	String slowo;
+    	boolean parsingProblems;
+    	int file_identity;
+    	String url;
+    	String statement = "";
+    	String restOfStatement = "";
+    	HashMap<Integer, Advertisement> adverts = new HashMap<Integer, Advertisement>();
+    	ArrayList<Integer> adIds = new ArrayList<Integer>();
+    	if((slowo = advert.getSlowaklucz().get(0)).length() > 0) {
+    		
+    		String query = "CREATE TEMPORARY TABLE adIds AS SELECT DISTINCT ad_identity as adId FROM slowaKluczowe WHERE UPPER(slowo) LIKE UPPER(\"%"+ slowo+"%\")";
+    		try {
+				stat.executeUpdate(query);
+//				int id;
+//				while(resultSet.next()) {
+//					id = resultSet.getInt(1);
+//					adIds.add(id);
+//					System.out.println(id);
+//				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+    		
+
+    	}
+    	
+
+    	String baseStatement ="";
+    	if(slowo.length() > 0) {
+    		baseStatement = "SELECT * FROM adverts left outer join filesInfo on adverts.file_identity = filesInfo.file_id join adIds on adIds.adId = adverts.ad_id ";
+    	}
+    	else {
+    		baseStatement = "SELECT * FROM adverts left outer join filesInfo on adverts.file_identity = filesInfo.file_id ";
+    	}
+
+    	boolean withWhere = false;
+    	if((stanowisko = advert.getStanowisko()).length() > 0) {
+    		withWhere = true;
+    		restOfStatement += restOfStatement.length() > 0 ? " AND UPPER(adverts.stanowisko) LIKE UPPER(\"%"+stanowisko+"%\")" : " UPPER(adverts.stanowisko) LIKE UPPER(\"%"+stanowisko+"%\")";
+    	}
+    	if((miasto = advert.getMiasto()).length() > 0) {
+    		withWhere = true;
+    		restOfStatement += restOfStatement.length() > 0 ? " AND UPPER(adverts.miasto) LIKE UPPER(\"%"+miasto+"%\")" : " UPPER(adverts.miasto) LIKE UPPER(\"%"+miasto+"%\")";
+    	}
+    	if((instytucja = advert.getInstytucja()).length() > 0) {
+    		withWhere = true;
+    		restOfStatement += restOfStatement.length() > 0 ? " AND UPPER(adverts.instytucja) LIKE UPPER(\"%"+instytucja+"%\")" : " UPPER(adverts.instytucja) LIKE UPPER(\"%"+instytucja+"%\")";
+    	}
+    	if((dyscyplinaNaukowa = advert.getDyscyplinaNaukowa()).length() > 0) {
+    		withWhere = true;
+    		restOfStatement += restOfStatement.length() > 0 ? " AND UPPER(adverts.dyscyplinaNaukowa) LIKE UPPER(\"%"+dyscyplinaNaukowa+"%\")" : " UPPER(adverts.dyscyplinaNaukowa) LIKE UPPER(\"%"+dyscyplinaNaukowa+"%\")";
+    	}
+    	
+    	
+    	if((advert.getDataOgloszenia()) != null) {
+    		dataOglosz = advert.getDataOgloszenia().getTime();
+    		dataOgloszenia = new java.sql.Date(dataOglosz);
+    		Calendar cal = Calendar.getInstance();
+    		cal.setTime(dataOgloszenia);
+    		cal.add(Calendar.DATE, -1);
+    		java.sql.Date newDate = new Date(cal.getTime().getTime());
+
+//    		System.out.println("Data: "+dataOgloszenia.toString());
+    		restOfStatement += restOfStatement.length() > 0 ? " AND adverts.dataOgloszenia > "+newDate.getTime() : "adverts.dataOgloszenia > "+newDate.getTime();
+    	}
+    	if((advert.getTerminSklOfert()) != null) {
+    		termSklOf = advert.getTerminSklOfert().getTime();
+    		terminSklOfert = new java.sql.Date(termSklOf);
+    		
+    		restOfStatement += restOfStatement.length() > 0 ? " AND adverts.terminSklOfert <= "+terminSklOfert.getTime() : "adverts.terminSklOfert > "+terminSklOfert.getTime();
+    	}
+    	if(withWhere) {
+    		baseStatement += "WHERE";
+    	}
+    	statement = baseStatement + restOfStatement;
+    	System.out.println(statement);
+    	try {
+    		ResultSet rs = stat.executeQuery(statement);
+    		while(rs.next()) {
+    			ad_id = rs.getInt(1);
+    			dataOgloszenia = rs.getDate(2);
+    			terminSklOfert = rs.getDate(3);
+    			dyscyplinaNaukowa = rs.getString(4);
+    			instytucja = rs.getString(5);
+    			miasto = rs.getString(6);
+    			opis = rs.getString(7);
+    			stanowisko = rs.getString(8);
+    			linkDoStrony = rs.getString(9);
+    			parsingProblems = rs.getBoolean(10);
+    			file_identity = rs.getInt(11);
+    			url = rs.getString(13);
+    			Advertisement adv = new Advertisement(ad_id, dataOgloszenia, dyscyplinaNaukowa, instytucja, linkDoStrony, miasto, opis, stanowisko, terminSklOfert, new ArrayList<String>(), parsingProblems, file_identity, url);
+    			adverts.put(ad_id, adv);
+    		}
+    		
+    		ResultSet rset = stat.executeQuery("SELECT * FROM slowaKluczowe");
+    		int adID;
+    		String sl;
+    		while(rset.next()) {
+    			sl = rset.getString(2);
+    			adID = rset.getInt(3);
+    			if(adverts.containsKey(adID)) {
+    				adverts.get(adID).getSlowaklucz().add(sl);
+    			}
+    		}
+    		
+    	}catch (SQLException e) {
+			log.error("Nieudało się pobrać ogłoszeń.");
 			e.printStackTrace();
 		}
     	return adverts;

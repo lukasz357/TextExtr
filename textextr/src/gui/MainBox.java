@@ -15,36 +15,35 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JLabel;
 
+import textextr.Advertisement;
 import textextr.DataBase;
+import textextr.HTMLView;
 import textextr.URLDownloaderRunnable;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import javax.swing.JTable;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.JTextField;
 
 //import TableDemo.IMDBLinkAction;
 
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class MainBox {
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+public class MainBox {
+	private static Log log = LogFactory.getLog(MainBox.class);
 	private JFrame frmTextextr;
 	JButton btnUst;
 	private JTextField textField;
@@ -222,18 +221,50 @@ public class MainBox {
 		
 		JLabel lblSowoKluczowe = new JLabel("Słowo kluczowe");
 		
-		JDateChooser dtChDataOgloszenia = new JDateChooser();
+		final JDateChooser dtChDataOgloszenia = new JDateChooser();
 		
 		JLabel lblDataOgoszenia = new JLabel("Data ogłoszenia");
 		
-		JDateChooser dtChTerminSklOfert = new JDateChooser();
+		final JDateChooser dtChTerminSklOfert = new JDateChooser();
 		
 		JLabel lblTerminSklOfert = new JLabel("Termin skl. ofert");
 		
 		JButton btnSzukaj = new JButton("Szukaj");
 		btnSzukaj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO 
+				try {
+					Class.forName("org.sqlite.JDBC");
+
+					DataBase datb = new DataBase();
+					String stanowisko, miasto, instytucja, dyscyplina, slowo;
+					Date dataOgl, termSklOf;
+					Advertisement ad = new Advertisement();
+					if((stanowisko = textField.getText() )!= null) {
+						ad.setStanowisko(stanowisko);
+					}
+					if((miasto = textField_1.getText()) != null)
+						ad.setMiasto(miasto);
+					if((instytucja = textField_2.getText()) != null)
+						ad.setInstytucja(instytucja);
+					if((dyscyplina = textField_3.getText()) != null)
+						ad.setDyscyplinaNaukowa(dyscyplina);
+					if((slowo = textField_4.getText()) != null)
+						ad.getSlowaklucz().add(slowo);
+					if((dataOgl = dtChDataOgloszenia.getDate()) != null)
+						ad.setDataOgloszenia(dataOgl);
+					if((termSklOf = dtChTerminSklOfert.getDate())!= null)
+						ad.setTerminSklOfert(termSklOf);
+					System.out.println("aaaa");
+					log.info("Klik Szukaj");
+					
+					ArrayList<Advertisement> ads = new ArrayList<Advertisement>(datb.getAdvertisements(ad).values());
+					
+					HTMLView view = new HTMLView(ads);
+					
+					view.generatePage();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -268,9 +299,9 @@ public class MainBox {
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblTerminSklOfert)
 						.addComponent(dtChTerminSklOfert, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addPreferredGap(ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
 					.addComponent(btnSzukaj)
-					.addContainerGap(56, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -282,25 +313,26 @@ public class MainBox {
 								.addComponent(lblMiasto)
 								.addComponent(lblInstytucja)
 								.addComponent(lblDyscNaukowa)
-								.addComponent(lblSowoKluczowe)
+								.addComponent(lblSowoKluczowe))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(textField, GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
+								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(19))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnSzukaj))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblDataOgoszenia)
 								.addComponent(lblTerminSklOfert))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-											.addComponent(textField, GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
-											.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addComponent(dtChDataOgloszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(19))
-								.addComponent(dtChTerminSklOfert, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnSzukaj)))
+								.addComponent(dtChDataOgloszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(dtChTerminSklOfert, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap())
 		);
 		panel.setLayout(gl_panel);

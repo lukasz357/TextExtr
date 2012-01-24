@@ -78,7 +78,7 @@ public class Advertisement {
 	}
 	
 	public Advertisement(){
-		
+		slowaklucz = new ArrayList<String>();
 	}
 	public Date getDataOgloszenia() {
 		return dataOgloszenia;
