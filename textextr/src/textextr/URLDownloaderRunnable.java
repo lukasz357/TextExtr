@@ -91,12 +91,10 @@ public class URLDownloaderRunnable implements Runnable{
 				}
 			}
 			
-			String str = "<html>" + "<font color=\"#008000\">" + "<b>" + 
-					 "Zakończono pobieranie plików." + "</b>" + "</font>" + "</html>";
+			String str = "Zakończono pobieranie plików.";
 			label.setText(str);
 			log.info("Zakończono pobieranie plików");
-			str = "<html>" + "<font color=\"#008000\">" + "<b>" + 
-					 "Trwa przetwarzanie plików." + "</b>" + "</font>" + "</html>";
+			str = "Trwa przetwarzanie plików.";
 			label.setText(str);
 			ArrayList<Advertisement> adverts = new ArrayList<Advertisement>();
 			list = db.getFileInfos();
@@ -117,8 +115,7 @@ public class URLDownloaderRunnable implements Runnable{
 			db.addAdverts(adverts);
 
 			log.info("Pomyślnie dodano ogłoszenia do bazy.");
-			str = "<html>" + "<font color=\"#008000\">" + "<b>" + 
-					 "Zakończono." + "</b>" + "</font>" + "</html>";
+			str = "Zakończono.";
 			label.setText(str);
 			bar.setIndeterminate(false);
 			btnAktualizuj.setEnabled(true);

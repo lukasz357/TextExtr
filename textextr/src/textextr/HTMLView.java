@@ -16,16 +16,17 @@ public class HTMLView {
 	private static Log log = LogFactory.getLog(HTMLView.class);
 	private ArrayList<Advertisement> adverts;
 	private String title;
+	private String fileName;
 	
 	public HTMLView(ArrayList<Advertisement> adverts) {
 		this.adverts = adverts;
 		this.title = "ZNALEZIONE OGŁOSZENIA";
 	}
 	
-	public void generatePage() {
+	public String generatePage() {
 	    FileWriter fstream = null;
 	    try {
-	    	String fileName = TextExtr.OUTPUT_HTML_PATH+"/" + getDateTime();
+	    	fileName = TextExtr.OUTPUT_HTML_PATH+"/" + getDateTime();
 	        fstream = new FileWriter(fileName);
 	        BufferedWriter out = new BufferedWriter(fstream);
 	        out.write("<html>\n"
@@ -133,15 +134,23 @@ public class HTMLView {
 	        out.write("</body>\n");
 	        out.write("</html>\n");
 	        out.close();
-	        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-	        if( desktop.isSupported( java.awt.Desktop.Action.BROWSE ) ) {
-	        	desktop.open(new File(fileName));
-	        }
+	        
 	    } catch (IOException ex) {
 	        log.error("Problem w konwersji do HTML");
 	    }
+	    return fileName;
 	}
 	
+	public void openInBrowser() {
+        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+        if( desktop.isSupported( java.awt.Desktop.Action.BROWSE ) ) {
+        	try {
+				desktop.open(new File(fileName));
+			} catch (IOException e) {
+				log.error("Problem z otwarciem pliku HTML");
+			}
+        }
+	}
 	private String getDateTime()  
 	{  
 	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");  

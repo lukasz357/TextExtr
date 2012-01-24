@@ -3,12 +3,15 @@ package gui;
 //import HyperlinkCellRenderer;
 //import OscarCellRenderers;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -27,6 +30,12 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -34,6 +43,8 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -41,17 +52,22 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import javax.swing.BoxLayout;
 
 public class MainBox {
 	private static Log log = LogFactory.getLog(MainBox.class);
 	private JFrame frmTextextr;
+	private JPanel resultPanel;
 	JButton btnUst;
+	private JScrollPane scrollPane;
+	private JEditorPane editorPane;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTable table;
+	private JLabel lblInfo;
 
 	public MainBox getMainBox(){
 		return this;
@@ -98,6 +114,11 @@ public class MainBox {
 			}
 		});
 		
+//		final JScrollPane scrollPane; //= new JScrollPane();
+//		resultPanel.add(scrollPane);
+		
+		editorPane = new JEditorPane();
+//		resultPanel.add(editorPane);
 		JPanel statusPanel = new JPanel();
 		statusPanel.setMaximumSize(new Dimension(32767, 100));
 		GroupLayout groupLayout = new GroupLayout(frmTextextr.getContentPane());
@@ -124,7 +145,7 @@ public class MainBox {
 					.addContainerGap())
 		);
 		
-		final JLabel lblInfo = new JLabel("");
+		lblInfo = new JLabel("");
 		
 		final JProgressBar progressBar = new JProgressBar();
 		GroupLayout gl_statusPanel = new GroupLayout(statusPanel);
@@ -159,8 +180,7 @@ public class MainBox {
 			public void actionPerformed(ActionEvent arg0) {
 				progressBar.setIndeterminate(true);
 				btnAktualizuj.setEnabled(false);
-				 String str = "<html>" + "<font color=\"#008000\">" + "<b>" + 
-						 "Trwa aktualizacja bazy ogłoszeń..." + "</b>" + "</font>" + "</html>";
+				 String str = "Trwa aktualizacja bazy ogłoszeń...";
 				lblInfo.setText(str);
 				try {
 					Class.forName("org.sqlite.JDBC");
@@ -261,7 +281,18 @@ public class MainBox {
 					
 					HTMLView view = new HTMLView(ads);
 					
-					view.generatePage();
+					String fileName = view.generatePage();
+					try {
+						editorPane.setPage("file://"+fileName);
+					} catch (IOException e) {
+						System.err.println(e);
+					}
+					editorPane.addHyperlinkListener(new MyHyperlinkListener());
+					editorPane.setEditable(false);
+					scrollPane=new JScrollPane(editorPane);  
+					resultPanel.add(scrollPane, BorderLayout.CENTER); 
+					view.openInBrowser();
+			
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -368,6 +399,12 @@ public class MainBox {
 		table.setIntercellSpacing(new Dimension(0, 0));
 		panel_1.add(table, "cell 0 0,grow");
 		szukajPanel.setLayout(gl_szukajPanel);
+		resultPanel = new JPanel();
+		tabbedPane.addTab("Wynik", null, resultPanel, null);
+		resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.X_AXIS));
+		
+
+ 
 		
 		JPanel infoPanel = new JPanel();
 		tabbedPane.addTab("INFO", null, infoPanel, null);
@@ -434,5 +471,37 @@ public class MainBox {
         columnModel.addColumn(column);
 
         return columnModel;
+    }
+    
+    class MyHyperlinkListener implements HyperlinkListener {
+        public void hyperlinkUpdate(HyperlinkEvent evt) {
+            if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+//                JEditorPane pane = (JEditorPane)evt.getSource();
+                // Show the new page in the editor pane.
+//                    pane.setPage(evt.getURL());
+				java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+				if( desktop.isSupported( java.awt.Desktop.Action.BROWSE ) ) {
+					try {
+						String uriString = "";
+						URL url = evt.getURL();
+						if(url != null) {
+							uriString = url.toString();
+						}
+						if(uriString.startsWith("http://")) {
+							desktop.browse(new URI(uriString));
+						}
+						else {
+							lblInfo.setText("Nieprawidłowy url");
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+						log.error("Problem z otwarciem pliku HTML");
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+            }
+        }
     }
 }
